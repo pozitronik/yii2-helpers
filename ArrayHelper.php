@@ -10,7 +10,6 @@ use yii\helpers\ArrayHelper as YiiArrayHelper;
 
 /**
  * Class ArrayHelper
- * @package app\helpers
  */
 class ArrayHelper extends YiiArrayHelper {
 
