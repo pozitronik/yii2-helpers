@@ -1,0 +1,30 @@
+{
+	"name": "pozitronik/yii2-helpers",
+	"description": "Some useful helpers for Yii2 framework",
+	"type": "yii2-extension",
+	"keywords": [
+		"yii2",
+		"extension",
+		"helper"
+	],
+	"license": "GPL-3.0",
+	"authors": [
+		{
+			"name": "Pavel Dubrovsky",
+			"email": "antikillerxxl@gmail.com"
+		}
+	],
+	"require": {
+		"yiisoft/yii2": "~2.0.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"pozitronik\\helpers\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0.x-dev"
+		}
+	}
+}
