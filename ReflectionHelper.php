@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace pozitronik\helpers;
 
 use app\helpers\PathHelper;
+use Closure;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
