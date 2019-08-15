@@ -130,4 +130,12 @@ class ReflectionHelper {
 		return self::New($model)->getMethods($filter);
 	}
 
+	/**
+	 * @param mixed $t
+	 * Cause is_executable not enough!
+	 */
+	function is_closure($t) {
+		return $t instanceof Closure;
+	}
+
 }
