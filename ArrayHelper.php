@@ -229,4 +229,35 @@ class ArrayHelper extends YiiArrayHelper {
 		return parent::map($array, $from, $to, $group);
 	}
 
+	/**
+	 * Мержит массивы строк так, что значения массива объединяются (не перезаписываются).
+	 * Теоретически, работает и рекурсивно (не проверялось).
+	 * Также теоретически будет работать не только для строк, но для любых значений, которые приводятся к строкам
+	 * @param string $glue
+	 * @param string[] $array1
+	 * @param string[] $array2
+	 * @param string[]|null $_
+	 * @return array
+	 * @throws Throwable
+	 */
+	public static function mergeImplode(string $glue, array $array1, array $array2, array $_ = null):array {
+		$arrays = func_get_args();
+		array_shift($arrays);//skip first argument
+		$merged = [];
+		while ($arrays) {
+			$array = array_shift($arrays);
+			if (!$array) continue;
+			/** @var array $array */
+			foreach ($array as $key => $value)
+				if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])) {
+					$merged[$key] = self::mergeImplode($glue, $merged[$key], $value);
+				} else if (null === $currentValue = self::getValue($merged, $key)) {
+					$merged[$key] = $value;
+				} else {
+					$merged[$key] = implode($glue, [$currentValue, $value]);//no unique filtering!
+				}
+		}
+		return $merged;
+	}
+
 }
