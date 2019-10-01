@@ -46,6 +46,22 @@ class ArrayHelper extends YiiArrayHelper {
 	}
 
 	/**
+	 * Устанавливает значение в массиве только в том случае, если его ещё не существует
+	 * @param array $array
+	 * @param string|array|null $path
+	 * @param mixed $value
+	 * @return bool -- true если инициализация была проведена
+	 * @throws Throwable
+	 */
+	public static function initValue(array &$array, $path, $value):bool {
+		if ((null === $currentValue = self::getValue($array, $path)) && $currentValue !== $value) {
+			self::setValue($array, $path, $value);
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Ищет значение в многомерном массиве, если находит его, то возвращает массив со всеми ключами до этого элемента
 	 * @param array $array
 	 * @param mixed $search
