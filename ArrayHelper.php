@@ -276,4 +276,16 @@ class ArrayHelper extends YiiArrayHelper {
 		return $merged;
 	}
 
+	/**
+	 * Easy filtering routine
+	 * @param array $array
+	 * @param array $filterValues -- array of values, that shall be dropped
+	 * @return array
+	 */
+	public static function filterValues(array $array, array $filterValues = ['', false, null]):array {
+		return (array_filter($array, function($item) use ($filterValues) {
+			return !in_array($item, $filterValues);
+		}));
+	}
+
 }
