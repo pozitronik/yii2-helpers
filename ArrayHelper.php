@@ -152,15 +152,25 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @param array $array
 	 * @param array $attributes Карта атрибутов в формате ['label' => 'attributeName', 'label2' => 'attribute2Name...]
 	 * @param string $keyIndexCode - параметр, при подстановке которого в имя атрибута в значении будет возвращен индекс
+	 * @param string $valueCode - параметр, при подстановке которого в имя атрибута в значении будет возвращено значение
 	 * @return array Массив в формате [['label' => $attribute1, 'label2' => $attribute2]]
 	 * @throws Throwable
 	 */
-	public static function mapEx(array $array, array $attributes, $keyIndexCode = 'key'):array {
+	public static function mapEx(array $array, array $attributes, $keyIndexCode = 'key', $valueCode = 'value'):array {
 		$result = [];
 		foreach ($array as $key => $element) {
 			$cell = [];
 			foreach ($attributes as $label => $attribute) {
-				$value = ($attribute === $keyIndexCode)?(string)$key:self::getValue($element, $attribute);
+				if (($attribute === $keyIndexCode)) {
+					$value = (string)$key;
+				} else {
+					if ($attribute === $valueCode) {
+						$value = $element;
+					} else {
+						$value = self::getValue($element, $attribute);
+					}
+
+				}
 				$cell[$label] = $value;
 			}
 			$result[] = $cell;
