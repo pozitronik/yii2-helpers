@@ -298,4 +298,14 @@ class ArrayHelper extends YiiArrayHelper {
 		}));
 	}
 
+	/**
+	 * Возвращает количество вхождений значения в массив
+	 * @param array $array
+	 * @param $value
+	 * @return int
+	 */
+	public static function countValue(array $array, $value):int {
+		return count(array_keys($array, $value));
+	}
+
 }
