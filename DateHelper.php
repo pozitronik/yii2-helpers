@@ -6,7 +6,6 @@ declare(strict_types = 1);
 
 namespace pozitronik\helpers;
 
-use app\models\core\SysExceptions;
 use DateTime;
 use DateInterval;
 use Exception;
@@ -91,7 +90,6 @@ class DateHelper {
 		$d = new DateTime($date);
 		$d1 = new DateTime($interval['start']);
 		$d2 = new DateTime($interval['end']);
-
 		return ($d2 >= $d && $d1 <= $d) || ($d1 >= $d && $d2 <= $d);
 	}
 
@@ -105,12 +103,7 @@ class DateHelper {
 		$currentWeekDay = $currentDate->format('w');
 		$t = 7 - $currentWeekDay;
 		$td = clone $currentDate;
-		try {
-			return $td->add(new DateInterval("P{$t}D"));
-		} catch (Throwable $t) {
-			SysExceptions::log($t, true);
-			return null;
-		}
+		return $td->add(new DateInterval("P{$t}D"));
 	}
 
 	/**
