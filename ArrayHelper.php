@@ -163,13 +163,10 @@ class ArrayHelper extends YiiArrayHelper {
 			foreach ($attributes as $label => $attribute) {
 				if (($attribute === $keyIndexCode)) {
 					$value = (string)$key;
+				} else if ($attribute === $valueCode) {
+					$value = $element;
 				} else {
-					if ($attribute === $valueCode) {
-						$value = $element;
-					} else {
-						$value = self::getValue($element, $attribute);
-					}
-
+					$value = self::getValue($element, $attribute);
 				}
 				$cell[$label] = $value;
 			}
@@ -293,7 +290,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @return array
 	 */
 	public static function filterValues(array $array, array $filterValues = ['', false, null]):array {
-		return (array_filter($array, function($item) use ($filterValues) {
+		return (array_filter($array, static function($item) use ($filterValues) {
 			return !in_array($item, $filterValues);
 		}));
 	}
