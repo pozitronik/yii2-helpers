@@ -133,8 +133,9 @@ class ReflectionHelper {
 	/**
 	 * @param mixed $t
 	 * Cause is_executable not enough!
+	 * @return bool
 	 */
-	public static function is_closure($t) {
+	public static function is_closure($t):bool {
 		return $t instanceof Closure;
 	}
 
