@@ -1,0 +1,36 @@
+<?php
+declare(strict_types = 1);
+
+namespace pozitronik\helpers;
+
+/**
+ * Class IconsHelper
+ * @package pozitronik\helpers
+ */
+class IconsHelper {
+
+	/**
+	 * Берём строку, генерируем из неё HTML-аватар (кругляшок с буковками)
+	 * @param string $input -- вводимая строка
+	 * @param int $radius -- радиус иконки
+	 * @param string $color -- цвет текста
+	 * @param string $background -- цвет фона
+	 * @param int $borderRadius -- толщина каёмки
+	 * @param string $borderColor -- цвет каёмки
+	 * @return string -- html-код иконки
+	 */
+	public static function iconifyString(string $input, int $radius = 15, string $color = 'black', string $background = 'white', int $borderRadius = 2, string $borderColor = "orange"):string {
+		$input = Utils::ShortifyString($input);
+		return "<div style='display: block; margin: {$borderRadius}px; text-align: center; line-height:{$radius}px;  width: {$radius}px; height: {$radius}px; color: $color; background: $background; border-radius: 50%; box-shadow: 0 0 0 {$borderRadius}px {$borderColor};'>{$input}</div>";
+	}
+
+	/**
+	 * @param $name
+	 * @param $arguments
+	 * @return string
+	 */
+	public static function __callStatic($name, $arguments):string {
+		return static::iconifyString($name, 8);
+	}
+
+}
