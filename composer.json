@@ -7,7 +7,7 @@
 		"extension",
 		"helper"
 	],
-	"license": "GPL-3.0",
+	"license": "GPL-3.0-or-later",
 	"authors": [
 		{
 			"name": "Pavel Dubrovsky",
@@ -19,7 +19,13 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"pozitronik\\helpers\\": ""
+			"pozitronik\\helpers\\": "src"
 		}
-	}
+	},
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://asset-packagist.org"
+		}
+	]
 }
