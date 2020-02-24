@@ -8,24 +8,16 @@
 		"helper"
 	],
 	"license": "GPL-3.0-or-later",
+	"minimum-stability": "dev",
 	"authors": [
 		{
 			"name": "Pavel Dubrovsky",
 			"email": "antikillerxxl@gmail.com"
 		}
 	],
-	"require": {
-		"yiisoft/yii2": "~2.0.0"
-	},
 	"autoload": {
 		"psr-4": {
 			"pozitronik\\helpers\\": "src"
 		}
-	},
-	"repositories": [
-		{
-			"type": "composer",
-			"url": "https://asset-packagist.org"
-		}
-	]
+	}
 }
