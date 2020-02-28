@@ -1,5 +1,4 @@
 <?php
-/** @noinspection ReturnFalseInspection */
 declare(strict_types = 1);
 
 namespace pozitronik\helpers;
@@ -36,9 +35,7 @@ class CsvHelper {
 	public static function arrayToCsv(array $array, string $delimiter = ';'):?string {
 		if (false !== ($file = fopen('php://temp/maxmemory:'.(5 * 1024 * 1024), 'wb'))) {
 			foreach ($array as $value) fputcsv($file, $value, $delimiter);
-
 			rewind($file);
-
 			return stream_get_contents($file);
 		}
 		return null;
@@ -59,6 +56,5 @@ class CsvHelper {
 			return $_fileName;
 		}
 		return null;
-
 	}
 }
