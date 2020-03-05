@@ -15,6 +15,9 @@
 			"email": "antikillerxxl@gmail.com"
 		}
 	],
+	"require-dev": {
+		"yiisoft/yii2": "*"
+	},
 	"autoload": {
 		"psr-4": {
 			"pozitronik\\helpers\\": "src"
