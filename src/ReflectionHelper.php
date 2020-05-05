@@ -139,4 +139,23 @@ class ReflectionHelper {
 		return $t instanceof Closure;
 	}
 
+	/**
+	 * Делает публичным закрытый метод класса
+	 * @param string|object $className -- класс (объект или имя)
+	 * @param string $methodName -- имя метода, который нужно открыть для доступа
+	 * @param bool $throwOnFail -- true - упасть при ошибке, false - вернуть null
+	 * @return null|ReflectionMethod -- открытый метод (null при ошибке)
+	 * @throws ReflectionException
+	 * @throws UnknownClassException
+	 */
+	public static function setAccessible($className, string $methodName, $throwOnFail = true):?ReflectionMethod {
+		if (null === $class = self::New($className, $throwOnFail)) return null;
+		try {
+			$reflectionMethod = new ReflectionMethod($class->getName(), $methodName);
+			$reflectionMethod->setAccessible(true);
+		} catch (Throwable $t) {
+			return null;
+		}
+		return $reflectionMethod;
+	}
 }
