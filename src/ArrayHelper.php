@@ -200,6 +200,45 @@ class ArrayHelper extends YiiArrayHelper {
 	}
 
 	/**
+	 * Аналог ArrayHelper::map склеивающий значения нескольких аттрибутов, также умеющий склеивать и значения ключей
+	 * @param array $array -- обрабатываемый массив объектов
+	 * @param array $concat_keys -- массив атрибутов, подставляемых в ключ. Если атрибут не существует, подставляется непосредственное значение. Если значение - функция, то подставится её результат
+	 * @param array $concat_values -- массив атрибутов, подставляемых в значение. Если атрибут не существует, подставляется непосредственное значение. Если значение - функция, то подставится её результат
+	 * @param string $keys_separator -- разделитель для ключей
+	 * @param string $values_separator -- разделитель для атрибутов
+	 * @return array
+	 *
+	 * @throws Throwable
+	 *
+	 */
+	public static function cmapEx(array $array, array $concat_keys, array $concat_values = [], string $keys_separator = '_', string $values_separator = ' '):array {
+		$result = [];
+		foreach ($array as $element) {
+			$value = [];
+			foreach ($concat_keys as $key) {
+				if ((is_object($element))) {
+					$value[] = $element->$key??$key;
+				} else {
+					$value[] = ArrayHelper::getValue($element, $key, $key);
+				}
+
+			}
+			$key = implode($keys_separator, $value);
+			$value = [];
+			foreach ($concat_values as $el) {
+				if ((is_object($element))) {
+					$value[] = $element->$el??$el;
+				} else {
+					$value[] = ArrayHelper::getValue($element, $el, $el);
+				}
+			}
+			$result[$key] = implode($values_separator, $value);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Мапит значения субмассива к верхнему индексу массива
 	 * @param array $array
 	 * @param mixed $attribute
