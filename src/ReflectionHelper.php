@@ -147,6 +147,7 @@ class ReflectionHelper {
 	 * @return null|ReflectionMethod -- открытый метод (null при ошибке)
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
+	 * @noinspection BadExceptionsProcessingInspection
 	 */
 	public static function setAccessible($className, string $methodName, $throwOnFail = true):?ReflectionMethod {
 		if (null === $class = self::New($className, $throwOnFail)) return null;
