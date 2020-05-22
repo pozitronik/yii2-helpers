@@ -219,7 +219,7 @@ class ArrayHelper extends YiiArrayHelper {
 				if ((is_object($element))) {
 					$value[] = $element->$key??$key;
 				} else {
-					$value[] = ArrayHelper::getValue($element, $key, $key);
+					$value[] = self::getValue($element, $key, $key);
 				}
 
 			}
@@ -229,7 +229,7 @@ class ArrayHelper extends YiiArrayHelper {
 				if ((is_object($element))) {
 					$value[] = $element->$el??$el;
 				} else {
-					$value[] = ArrayHelper::getValue($element, $el, $el);
+					$value[] = self::getValue($element, $el, $el);
 				}
 			}
 			$result[$key] = implode($values_separator, $value);
