@@ -272,7 +272,7 @@ class ArrayHelper extends YiiArrayHelper {
 	/**
 	 * Возвращает первый ключ массива (удобно для парсинга конфигов в тех случаях, когда нельзя полагаться на array_key_first())
 	 * @param array $array
-	 * @return string|int
+	 * @return mixed
 	 * @throws Throwable
 	 */
 	public static function key(array $array) {
