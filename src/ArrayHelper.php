@@ -29,7 +29,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @param array|object $array
 	 * @param array|Closure|string $key
 	 * @param null|Throwable|Closure $default
-	 * @return mixed
+	 * @return null|int|string
 	 * @throws Throwable
 	 */
 	public static function getValue($array, $key, $default = null) {
@@ -42,6 +42,7 @@ class ArrayHelper extends YiiArrayHelper {
 				throw $default;
 			}
 		}
+		/** @var null|int|string $result */
 		return $result;
 	}
 
