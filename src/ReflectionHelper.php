@@ -119,13 +119,13 @@ class ReflectionHelper {
 	}
 
 	/**
-	 * @param object $model
+	 * @param string|object $model
 	 * @param int $filter
 	 * @return array
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
 	 */
-	public static function GetMethods(object $model, int $filter = ReflectionMethod::IS_PUBLIC):array {
+	public static function GetMethods($model, int $filter = ReflectionMethod::IS_PUBLIC):array {
 		/** @noinspection NullPointerExceptionInspection */
 		return self::New($model)->getMethods($filter);
 	}
