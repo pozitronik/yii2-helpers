@@ -73,13 +73,14 @@ class ReflectionHelper {
 	 * Загружает класс из файла (при условии одного класса в файле и совпадения имени файла с именем класса)
 	 * @param string $fileName
 	 * @param string[]|null $parentClassFilter Опциональный фильтр родительского класса
+	 * @param bool $throwOnFail true - упасть при ошибке, false - вернуть null
 	 * @return ReflectionClass
 	 * @throws ReflectionException
 	 * @throws Throwable
 	 * @throws UnknownClassException
 	 */
-	public static function LoadClassFromFile(string $fileName, ?array $parentClassFilter = null):object {
-		return self::LoadClassByName(self::GetClassNameFromFile($fileName), $parentClassFilter);
+	public static function LoadClassFromFile(string $fileName, ?array $parentClassFilter = null, $throwOnFail = true):object {
+		return self::LoadClassByName(self::GetClassNameFromFile($fileName), $parentClassFilter, $throwOnFail);
 	}
 
 	/**
