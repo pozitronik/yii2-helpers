@@ -64,7 +64,7 @@ class ReflectionHelper {
 	 */
 	public static function LoadClassByName(string $className, ?array $parentClassFilter = null, $throwOnFail = true):?object {
 		if (null === $class = self::New($className, $throwOnFail)) return null;
-		if (self::IsInSubclassOf($class, $parentClassFilter)) return new $className;
+		if (self::IsInSubclassOf($class, $parentClassFilter)) return new $className();
 		if ($throwOnFail) throw new InvalidConfigException("Class $className not found in application scope!");
 		return null;
 	}
