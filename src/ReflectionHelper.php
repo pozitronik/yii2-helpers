@@ -74,12 +74,12 @@ class ReflectionHelper {
 	 * @param string $fileName
 	 * @param string[]|null $parentClassFilter Опциональный фильтр родительского класса
 	 * @param bool $throwOnFail true - упасть при ошибке, false - вернуть null
-	 * @return ReflectionClass
+	 * @return ReflectionClass|null
 	 * @throws ReflectionException
 	 * @throws Throwable
 	 * @throws UnknownClassException
 	 */
-	public static function LoadClassFromFile(string $fileName, ?array $parentClassFilter = null, $throwOnFail = true):object {
+	public static function LoadClassFromFile(string $fileName, ?array $parentClassFilter = null, $throwOnFail = true):?object {
 		return self::LoadClassByName(self::GetClassNameFromFile($fileName), $parentClassFilter, $throwOnFail);
 	}
 
