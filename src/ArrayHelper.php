@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper as YiiArrayHelper;
 class ArrayHelper extends YiiArrayHelper {
 
 	/**
-	 * Шорткат для мержа массива с массивом, полученным в цикле
+	 * Шорткат для объединения массива с массивом, полученным в цикле
 	 * @see https://github.com/kalessil/phpinspectionsea/blob/master/docs/performance.md#slow-array-function-used-in-loop
 	 * @param array $array1
 	 * @param array $array2
@@ -25,7 +25,7 @@ class ArrayHelper extends YiiArrayHelper {
 	}
 
 	/**
-	 * Расширенная функция, может кидать исключение или выполнять замыканьице
+	 * Расширенная функция, может кидать исключение или выполнять замыкание
 	 * @param array|object $array
 	 * @param array|Closure|string $key
 	 * @param null|Throwable|Closure $default
@@ -164,7 +164,7 @@ class ArrayHelper extends YiiArrayHelper {
 			foreach ($attributes as $label => $attribute) {
 				if (($attribute === $keyIndexCode)) {
 					$value = (string)$key;
-				} else if ($attribute === $valueCode) {
+				} elseif ($attribute === $valueCode) {
 					$value = $element;
 				} else {
 					$value = self::getValue($element, $attribute);
@@ -273,7 +273,7 @@ class ArrayHelper extends YiiArrayHelper {
 	/**
 	 * Возвращает первый ключ массива (удобно для парсинга конфигов в тех случаях, когда нельзя полагаться на array_key_first())
 	 * @param array $array
-	 * @return mixed
+	 * @return int|string|null
 	 * @throws Throwable
 	 */
 	public static function key(array $array) {
@@ -314,7 +314,7 @@ class ArrayHelper extends YiiArrayHelper {
 			foreach ($array as $key => $value)
 				if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])) {
 					$merged[$key] = self::mergeImplode($glue, $merged[$key], $value);
-				} else if (null === $currentValue = self::getValue($merged, $key)) {
+				} elseif (null === $currentValue = self::getValue($merged, $key)) {
 					$merged[$key] = $value;
 				} else {
 					$merged[$key] = implode($glue, [$currentValue, $value]);//no unique filtering!
@@ -326,12 +326,13 @@ class ArrayHelper extends YiiArrayHelper {
 	/**
 	 * Easy filtering routine
 	 * @param array $array
-	 * @param array $filterValues -- array of values, that shall be dropped
+	 * @param array $filterValues array of values, that shall be dropped
+	 * @param bool $strict strict types filtering
 	 * @return array
 	 */
-	public static function filterValues(array $array, array $filterValues = ['', false, null]):array {
-		return (array_filter($array, static function($item) use ($filterValues) {
-			return !in_array($item, $filterValues);
+	public static function filterValues(array $array, array $filterValues = ['', false, null], bool $strict = false):array {
+		return (array_filter($array, static function($item) use ($filterValues, $strict) {
+			return !in_array($item, $filterValues, $strict);
 		}));
 	}
 

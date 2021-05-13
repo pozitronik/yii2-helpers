@@ -76,7 +76,7 @@ class DateHelper {
 	 * @return string
 	 */
 	public static function zeroAddMoth(int $month):string {
-		return 1 === strlen($month)?'0'.$month:(string)$month;
+		return 1 === strlen((string)$month)?'0'.$month:(string)$month;
 	}
 
 	/**
@@ -137,7 +137,7 @@ class DateHelper {
 	 * Получение полных дней между двумя датами
 	 * @param string $dateStart
 	 * @param string $dateEnd
-	 * @return mixed
+	 * @return false|int
 	 * @throws Exception
 	 */
 	public static function fullDays(string $dateStart, string $dateEnd) {
@@ -148,7 +148,7 @@ class DateHelper {
 	}
 
 	/**
-	 * @param integer $date - timestamp
+	 * @param int $date - timestamp
 	 * @return int
 	 */
 	public static function getDayEnd(int $date):int {

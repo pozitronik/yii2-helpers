@@ -52,7 +52,7 @@ class Utils {
 	 * @param mixed $data - данные для логирования
 	 * @param bool|false|string $title - заголовок логируемых данных
 	 * @param string $logName - файл вывода
-	 * @param integer $format - формат вывода данных
+	 * @param int $format - формат вывода данных
 	 * @return string $string - возвращаем текстом всё, что налогировали
 	 */
 	public static function fileLog($data, $title = false, $logName = 'debug.log', $format = self::PRINT_R):string {
@@ -97,7 +97,7 @@ class Utils {
 	/** @noinspection PhpDocMissingThrowsInspection */
 	/**
 	 * RFC-4122 UUID
-	 * @param integer|bool|false $length if defined, return only first $length symbols
+	 * @param int|bool|false $length if defined, return only first $length symbols
 	 * @return bool|string
 	 */
 	public static function gen_uuid($length = false) {
@@ -158,7 +158,7 @@ class Utils {
 
 	/**
 	 * Переводит десятичный индекс в число позиционной системы счисления
-	 * @param integer|float|false $n - десятичный индекс
+	 * @param int|float|false $n - десятичный индекс
 	 * @param string $alphabet - позиционный алфавит
 	 * @return string - строка с числом в указанном алфавите.
 	 */
@@ -299,9 +299,10 @@ class Utils {
 	 * Return two first word letters of input (used for iconify text)
 	 * @param string $input
 	 * @return string
+	 * @noinspection OffsetOperationsInspection
 	 */
 	public static function ShortifyString(string $input):string {
-		$inputA = explode(' ', $input);
+		if (false === $inputA = explode(' ', $input)) return '?';
 		switch (count($inputA)) {
 			case 0:
 				$input = '?';
