@@ -43,7 +43,7 @@ class ReflectionHelper {
 	 * @throws UnknownClassException
 	 */
 	public static function New($className, $throwOnFail = true):?ReflectionClass {
-		if (is_string($className) && !class_exists($className) && !interface_exists($className)) Yii::autoload($className);
+		if (is_string($className) && !class_exists($className) && !interface_exists($className) && !trait_exists($className)) Yii::autoload($className);
 		try {
 			return new ReflectionClass($className);
 		} catch (ReflectionException $t) {
