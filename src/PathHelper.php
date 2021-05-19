@@ -4,6 +4,9 @@ declare(strict_types = 1);
 namespace pozitronik\helpers;
 
 use RuntimeException;
+use Throwable;
+use Yii;
+use yii\helpers\BaseFileHelper;
 
 /**
  * Class PathHelper
@@ -52,5 +55,44 @@ class PathHelper {
 	 */
 	public static function ExtractFileName(string $filename):string {
 		return pathinfo($filename, PATHINFO_BASENAME);
+	}
+
+	/**
+	 * Находит разницу между двумя путями, возвращая относительный путь меж ними
+	 * @param string $path
+	 * @param string $basePath
+	 * @param bool $caseSensitivity
+	 * @return string
+	 */
+	public static function RelativePath(string $path, string $basePath = "@app", bool $caseSensitivity = false):string {
+		$path = BaseFileHelper::normalizePath($path);
+		$basePath = BaseFileHelper::normalizePath(Yii::getAlias($basePath));
+
+		if (!$caseSensitivity) {
+			$path = mb_strtolower($path);
+			$basePath = mb_strtolower($basePath);
+		}
+
+		$fileNameSplit = explode(DIRECTORY_SEPARATOR, $path);
+		$basePathSplit = explode(DIRECTORY_SEPARATOR, $basePath);
+
+		while ($fileNameSplit && $basePathSplit && $fileNameSplit[0] === $basePathSplit[0]) {
+			array_shift($basePathSplit);
+			array_shift($fileNameSplit);
+		}
+
+		return implode(DIRECTORY_SEPARATOR, $fileNameSplit);
+	}
+
+	/**
+	 * Переводит путь в ФС в ссылку (примитивно)
+	 * @param string $path
+	 * @return string
+	 * @throws Throwable
+	 */
+	public static function PathToUrl(string $path):string {
+		$path = str_replace(DIRECTORY_SEPARATOR, "/", $path);
+		if ("/" !== ArrayHelper::getValue($path, 0)) $path = "/".$path;
+		return $path;
 	}
 }
