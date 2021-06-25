@@ -9,8 +9,6 @@ use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\base\Module;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
-use yii\helpers\Url;
 
 /**
  * Class ModuleHelper
@@ -114,42 +112,5 @@ class ModuleHelper {
 		}
 		return [];
 	}
-
-	/**
-	 * Возвращает путь внутри модуля. Путь всегда будет абсолютный, от корня
-	 * @param string|array $route -- контроллер и экшен + параметры
-	 * @return string
-	 * @throws InvalidConfigException
-	 * @throws Throwable
-	 * @example SalaryModule::to(['salary/index','id' => 10]) => /salary/salary/index?id=10
-	 * @example UsersModule::to('users/index') => /users/users/index
-	 */
-	public static function to($route = ''):string {
-		if ((null === $module = Module::getInstance()) && null === $module = self::GetModuleByClassName(static::class)) {
-			throw new InvalidConfigException("Модуль ".static::class." не подключён");
-		}
-		if (is_array($route)) {/* ['controller{/action}', 'actionParam' => $paramValue */
-			ArrayHelper::setValue($route, 0, Utils::setAbsoluteUrl($module->id.Utils::setAbsoluteUrl(ArrayHelper::getValue($route, 0))));
-		} else {/* 'controller{/action}' */
-			if ('' === $route) $route = $module->defaultRoute;
-			$route = Utils::setAbsoluteUrl($module->id.Utils::setAbsoluteUrl($route));
-		}
-		return Url::to($route);
-	}
-
-	/**
-	 * Генерация html-ссылки внутри модуля (аналог Html::a(), но с автоматическим учётом путей модуля).
-	 * @param string $text
-	 * @param array|string|null $url
-	 * @param array $options
-	 * @return string
-	 * @throws InvalidConfigException
-	 * @throws Throwable
-	 */
-	public static function a(string $text, $url = null, array $options = []):string {
-		$url = static::to($url);
-		return Html::a($text, $url, $options);
-	}
-
 
 }
