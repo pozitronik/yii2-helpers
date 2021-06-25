@@ -146,7 +146,7 @@ class ControllerHelper {
 	 * @param string $className
 	 * @return string
 	 */
-	private static function ExtractControllerId(string $className):string {
+	public static function ExtractControllerId(string $className):string {
 		$controllerName = preg_replace('/(^.+)(\\\)([A-Z].+)(Controller$)/', '$3', $className);//app/shit/BlaBlaBlaController => BlaBlaBla
 		return mb_strtolower(implode('-', preg_split('/([[:upper:]][[:lower:]]+)/', $controllerName, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY)));
 	}
