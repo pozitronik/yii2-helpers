@@ -1,4 +1,4 @@
-#yii2-helpers
+yii2-helpers
 ===========================
 Some useful helpers for Yii2 framework
 
@@ -24,8 +24,7 @@ to the require section of your `composer.json` file.
 Requirements
 ------------
 
-Yii2,
-PHP >= 7.2.0
+PHP >= 7.4.0
 
 Usage
 -----
