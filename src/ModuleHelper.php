@@ -36,13 +36,15 @@ class ModuleHelper {
 
 	/**
 	 * Возвращает список подключённых модулей. Список можно задать в конфигурации, либо же вернутся все подходящие модули, подключённые в Web.php
-	 * @return Module[] Массив подключённых модулей
+	 * @param string[]|null $whiteList Массив с перечислением имён модулей, включаемых в перечисление, null - все модули
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	public static function ListModules():array {
+	public static function ListModules(?array $whiteList = null):array {
 		$modules = [];
-		foreach (Yii::$app->modules as $name => $module) {
+		$appModules = (null === $whiteList)?Yii::$app->modules:array_intersect_key(Yii::$app->modules, array_flip($whiteList));
+
+		foreach ($appModules as $name => $module) {
 			if (is_object($module)) {
 				if ($module instanceof Module) $modules[$name] = $module;
 			} elseif (null !== $loadedModule = self::LoadModule($name, $module)) {
