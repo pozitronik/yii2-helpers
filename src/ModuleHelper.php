@@ -37,18 +37,22 @@ class ModuleHelper {
 	/**
 	 * Возвращает список подключённых в конфигурации приложения модулей.
 	 * @param string[]|null $whiteList Массив с перечислением имён модулей, включаемых в перечисление, null - все модули
+	 * @param bool $doLoad true - вернуть список, загрузив все модули, false - вернуть as is (загруженные модули
+	 * вернутся, как модули, остальные вернутся, как конфигурации).
+	 * @return array
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	public static function ListModules(?array $whiteList = null):array {
+	public static function ListModules(?array $whiteList = null, bool $doLoad = true):array {
 		$modules = [];
 		$appModules = (null === $whiteList)?Yii::$app->modules:array_intersect_key(Yii::$app->modules, array_flip($whiteList));
-
 		foreach ($appModules as $name => $module) {
-			if (is_object($module)) {
-				if ($module instanceof Module) $modules[$name] = $module;
-			} elseif (null !== $loadedModule = self::LoadModule($name, $module)) {
-				$modules[$name] = $loadedModule;
+			if (is_object($module) && ($module instanceof Module)) {//загруженный модуль
+				$modules[$name] = $module;
+			} elseif ($doLoad) {
+				if (null !== $loadedModule = self::LoadModule($name, $module)) $modules[$name] = $loadedModule;
+			} else {
+				$modules[$name] = $module;
 			}
 		}
 		return $modules;
