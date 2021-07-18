@@ -61,13 +61,16 @@ class ModuleHelper {
 	/**
 	 * Возвращает модуль по его id
 	 * @param string $moduleId
+	 * @param bool $doLoad true - вернуть список, загрузив все модули, false - вернуть as is (загруженные модули
+	 * вернутся, как модули, остальные вернутся, как конфигурации).
 	 * @return Module|null
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	public static function GetModuleById(string $moduleId):?Component {
-		return ArrayHelper::getValue(self::ListModules(), $moduleId);
+	public static function GetModuleById(string $moduleId, bool $doLoad = true):?Component {
+		return ArrayHelper::getValue(self::ListModules([$moduleId], $doLoad), $moduleId);
 	}
+
 
 	/**
 	 * Возвращает модуль по его имени класса
