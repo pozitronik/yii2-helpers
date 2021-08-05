@@ -55,7 +55,7 @@ class Utils {
 	 * @param int $format - формат вывода данных
 	 * @return string $string - возвращаем текстом всё, что налогировали
 	 */
-	public static function fileLog($data, $title = false, $logName = 'debug.log', $format = self::PRINT_R):string {
+	public static function fileLog($data, $title = false, string $logName = 'debug.log', int $format = self::PRINT_R):string {
 		$return_contents = '';
 		if ($format === self::AS_IS && !is_scalar($data)) $format = self::PRINT_R;
 		switch ($format) {
@@ -260,7 +260,7 @@ class Utils {
 	 * @param bool $include_alpha
 	 * @return array
 	 */
-	private static function RGBToArray(string $color, $include_alpha = false):array {
+	public static function RGBToArray(string $color, bool $include_alpha = false):array {
 		$pattern = '~^rgba?\((25[0-5]|2[0-4]\d|1\d{2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{2}|\d\d?)\s*(?:,\s*([01]\.?\d*?))?\)$~';
 		if (!preg_match($pattern, $color, $matches)) {
 			return [];  // disqualified / no match
@@ -281,17 +281,22 @@ class Utils {
 	}
 
 	/**
-	 * Get latest
+	 * Get latest commit
 	 * @return string
+	 * @noinspection BadExceptionsProcessingInspection
 	 */
 	public static function LastCommit():string {
-		$headFileName = Yii::getAlias('@app/.git/HEAD');
-		if (!file_exists($headFileName)) return 'unknown';
-		preg_match('#^ref:(.+)$#', file_get_contents($headFileName), $matches);
+		try {
+			$headFileName = Yii::getAlias('@app/.git/HEAD');
+			if (!file_exists($headFileName)) return 'unknown';
+			preg_match('#^ref:(.+)$#', file_get_contents($headFileName), $matches);
 
-		$currentHead = trim($matches[1]);
-		$currentHeadFileName = sprintf(Yii::getAlias("@app/.git/{$currentHead}"));
-		if (file_exists($currentHeadFileName) && (false !== $hash = file_get_contents($currentHeadFileName))) return $hash;
+			$currentHead = trim($matches[1]);
+			$currentHeadFileName = Yii::getAlias("@app/.git/{$currentHead}");
+			if (file_exists($currentHeadFileName) && (false !== $hash = file_get_contents($currentHeadFileName))) return $hash;
+		} catch (Throwable $t) {
+			return 'unknown';
+		}
 		return 'unknown';
 	}
 
