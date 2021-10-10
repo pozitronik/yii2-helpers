@@ -100,14 +100,15 @@ class PathHelper {
 	 * Проверяет, находится ли $path внутри хотя бы одного пути в $pathBranches
 	 * @param string $path
 	 * @param string[] $pathBranches
-	 * @param bool $caseSensitive
 	 * @return bool
 	 */
-	public static function InPath(string $path, array $pathBranches, bool $caseSensitive = true):bool {
+	public static function InPath(string $path, array $pathBranches):bool {
+		$pathBranches = array_map(static function($value) {
+			return BaseFileHelper::normalizePath(Yii::getAlias($value, false));
+		}, $pathBranches);
+
 		foreach ($pathBranches as $parentDir) {
-			if (substr_compare(BaseFileHelper::normalizePath($path), BaseFileHelper::normalizePath($parentDir), 0, null, $caseSensitive)) {
-				return true;
-			}
+			if (false !== strrpos(BaseFileHelper::normalizePath(Yii::getAlias($path, false)), $parentDir)) return true;
 		}
 		return false;
 	}
