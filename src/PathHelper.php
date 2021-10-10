@@ -95,4 +95,20 @@ class PathHelper {
 		if ("/" !== ArrayHelper::getValue($path, 0)) $path = "/".$path;
 		return $path;
 	}
+
+	/**
+	 * Проверяет, находится ли $path внутри хотя бы одного пути в $pathBranches
+	 * @param string $path
+	 * @param string[] $pathBranches
+	 * @param bool $caseSensitive
+	 * @return bool
+	 */
+	public static function InPath(string $path, array $pathBranches, bool $caseSensitive = true):bool {
+		foreach ($pathBranches as $parentDir) {
+			if (substr_compare(BaseFileHelper::normalizePath($path), BaseFileHelper::normalizePath($parentDir), 0, null, $caseSensitive)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
