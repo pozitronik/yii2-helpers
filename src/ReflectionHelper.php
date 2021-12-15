@@ -7,6 +7,7 @@ use Closure;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionProperty;
 use Throwable;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -159,5 +160,16 @@ class ReflectionHelper {
 			return null;
 		}
 		return $reflectionMethod;
+	}
+
+	/**
+	 * Возвращает тип атрибута класса, null, если не объявлен
+	 * @param object|string $class
+	 * @param string $property
+	 * @return string|null
+	 * @throws ReflectionException
+	 */
+	public static function getPropertyType(object|string $class, string $property):?string {
+		return (new ReflectionProperty($class, $property))?->getType()?->getName();
 	}
 }
