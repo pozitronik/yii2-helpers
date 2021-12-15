@@ -1,7 +1,4 @@
 <?php
-/** @noinspection MissingParameterTypeDeclarationInspection */
-/** @noinspection MissingReturnTypeInspection */
-/** @noinspection ReturnFalseInspection */
 declare(strict_types = 1);
 
 namespace pozitronik\helpers;
@@ -9,46 +6,42 @@ namespace pozitronik\helpers;
 use DateTime;
 use DateInterval;
 use Exception;
-use Throwable;
 
 /**
  * Class DateHelper
- * @package app\helpers
  */
 class DateHelper {
 
-	/*Еврибади гоин крейзи*/
+	/*Константы даты и времени*/
 	public const SECONDS_IN_YEAR = 31536000;
 	public const SECONDS_IN_MONTH = 2592000;
 	public const SECONDS_IN_DAY = 86400;
 	public const SECONDS_IN_HOUR = 3600;
 	public const SECONDS_IN_MINUTE = 60;
 
+	public const DEFAULT_DATE_FORMAT = 'Y-m-d H:i:s';
+
 	/**
 	 * Мы постоянно используем такую дату, меня задалбывает вспоминать или копипастить, пусть будет алиас
 	 * @return string
 	 */
 	public static function lcDate():string {
-		return date('Y-m-d H:i:s');
+		return date(self::DEFAULT_DATE_FORMAT);
 	}
 
 	/**
 	 * Прибавляет заданное кол-во к месяцу
 	 * @param null|int $int
 	 * @param null|int $month
-	 * @return false|string
+	 * @return string
 	 */
-	public static function monthPlus(?int $int = null, ?int $month = null) {
+	public static function monthPlus(?int $int = null, ?int $month = null):string {
 		if (null === $int) {
 			return date('m');
 		}
-
-		if (null !== $month) {
-			$month += $int;
-		} else {
-			$month = date('m') + $int;
-		}
-
+		$month = null !== $month
+			?(int)date('m') + $int
+			:$month + $int;
 		return self::zeroAddMoth($month);
 	}
 
@@ -56,9 +49,9 @@ class DateHelper {
 	 * Отнимает заданное кол-во от месяца
 	 * @param null|int $int
 	 * @param null|int $month
-	 * @return false|null|string
+	 * @return string
 	 */
-	public static function monthMinus(?int $int = null, ?int $month = null) {
+	public static function monthMinus(?int $int = null, ?int $month = null):string {
 		if (null === $int) {
 			return date('m');
 		}
@@ -80,9 +73,9 @@ class DateHelper {
 	}
 
 	/**
-	 * Проверяет попадает ли выбранная дата в интервал дат
+	 * Проверяет, попадает ли выбранная дата в интервал дат
 	 * @param string $date Проверяемая дата (Y-m-d)
-	 * @param array $interval Массив интервала дат ['start' => 'Y-m-d', 'end' => 'Y-m-d']
+	 * @param string[] $interval Массив интервала дат ['start' => 'Y-m-d', 'end' => 'Y-m-d']
 	 * @return bool
 	 * @throws Exception
 	 */
@@ -96,14 +89,12 @@ class DateHelper {
 	/**
 	 * Возвращает DateTime конца недели, в которой находится день $currentDate
 	 * @param DateTime $currentDate - обсчитываемая дата, по ней и вычисляется неделя
-	 * @return DateTime
-	 * @throws Throwable
+	 * @return DateTime|null
 	 */
 	public static function getWeekEnd(DateTime $currentDate):?DateTime {
 		$currentWeekDay = $currentDate->format('w');
 		$t = 7 - $currentWeekDay;
-		$td = clone $currentDate;
-		return $td->add(new DateInterval("P{$t}D"));
+		return (clone $currentDate)->add(new DateInterval("P{$t}D"));
 	}
 
 	/**
@@ -117,9 +108,7 @@ class DateHelper {
 	public static function diff(string $dateStart, string $dateEnd, string $format):string {
 		$date1 = new DateTime($dateStart);
 		$date2 = new DateTime($dateEnd);
-		$diff = $date1->diff($date2);
-
-		return $diff->format($format);
+		return $date1->diff($date2)->format($format);
 	}
 
 	/**
@@ -128,7 +117,7 @@ class DateHelper {
 	 * @param string $format
 	 * @return bool
 	 */
-	public static function isValidDate(string $date, string $format = 'Y-m-d H:i:s'):bool {
+	public static function isValidDate(string $date, string $format = self::DEFAULT_DATE_FORMAT):bool {
 		$d = DateTime::createFromFormat($format, $date);
 		return $d && $d->format($format) === $date;
 	}
@@ -148,24 +137,23 @@ class DateHelper {
 	}
 
 	/**
-	 * @param int $date - timestamp
+	 * @param int $date timestamp
 	 * @return int
 	 */
 	public static function getDayEnd(int $date):int {
-		return mktime(0, 0, 0, date("m", $date), date("d", $date) + 1, date("y", $date));
+		return mktime(0, 0, 0, (int)date("m", $date), (int)date("d", $date) + 1, (int)date("y", $date));
 	}
 
 	/**
 	 * Выдаёт форматированное в заданный формат время
-	 * @param bool|int|null $delay - количество секунд для преобразования
+	 * @param bool|int|null $delay Количество секунд для преобразования
 	 * @param bool $short_format
 	 * @return string|false
 	 * @throws Exception
 	 */
-	public static function seconds2times($delay, bool $short_format = false) {
-		if (null === $delay) $delay = false;
+	public static function seconds2times(bool|int|null $delay, bool $short_format = false) {
+		if (null === $delay || false === $delay) return false;//используется для оптимизации статистики SLA
 		if (true === $delay) return "Отключено";
-		if (false === $delay) return false;//используется для оптимизации статистики SLA
 		$str_delay = (string)$delay;
 		$sign = '';
 		if (0 === strncmp($str_delay, '-', 1)) {
@@ -195,21 +183,21 @@ class DateHelper {
 	 * Аналог SQL-функции UNIX_TIMESTAMP
 	 * Возвращает таймстамп даты SQL-формата
 	 * @param string $date
-	 * @return int|false
+	 * @return int|null
 	 */
-	public static function unix_timestamp(string $date) {
-		if (!$date) return false;
-		$dt = DateTime::createFromFormat("Y-m-d H:i:s", $date);
-		return $dt->getTimestamp();
+	public static function unix_timestamp(string $date):?int {
+		return (false === $datetime = DateTime::createFromFormat(self::DEFAULT_DATE_FORMAT, $date))
+			?null
+			:$datetime->getTimestamp();
 	}
 
 	/**
 	 * Конвертирует таймстамп в дату
 	 * @param int $timestamp
-	 * @return false|string
+	 * @return string
 	 */
-	public static function from_unix_timestamp(int $timestamp) {
-		return date("Y-m-d H:i:s", $timestamp);
+	public static function from_unix_timestamp(int $timestamp):string {
+		return date(self::DEFAULT_DATE_FORMAT, $timestamp);
 	}
 
 	/**
@@ -222,14 +210,13 @@ class DateHelper {
 		foreach ($interval as $time => $value) {
 			switch ($time) {
 				case 'd':
-					/** @noinspection SummerTimeUnsafeTimeManipulationInspection */
-					$seconds += $value * 24 * 60 * 60;
+					$seconds += $value * self::SECONDS_IN_DAY;
 				break;
 				case 'h':
-					$seconds += $value * 60 * 60;
+					$seconds += $value * self::SECONDS_IN_HOUR;
 				break;
 				case 'i':
-					$seconds += $value * 60;
+					$seconds += $value * self::SECONDS_IN_MINUTE;
 				break;
 				case 's':
 					$seconds += $value;
