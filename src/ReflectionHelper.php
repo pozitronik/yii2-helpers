@@ -15,7 +15,6 @@ use yii\base\UnknownClassException;
 
 /**
  * Class ReflectionHelper
- * @package app\models\core\helpers
  */
 class ReflectionHelper {
 
@@ -37,13 +36,13 @@ class ReflectionHelper {
 
 	/**
 	 * Инициализирует рефлектор, но не загружает класс
-	 * @param string|object $className Имя класса/экземпляр класса
+	 * @param object|string $className Имя класса/экземпляр класса
 	 * @param bool $throwOnFail true - упасть при ошибке, false - вернуть null
 	 * @return ReflectionClass|null
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
 	 */
-	public static function New($className, $throwOnFail = true):?ReflectionClass {
+	public static function New(object|string $className, bool $throwOnFail = true):?ReflectionClass {
 		if (is_string($className) && !class_exists($className) && !interface_exists($className) && !trait_exists($className)) Yii::autoload($className);
 		try {
 			return new ReflectionClass($className);
@@ -55,17 +54,17 @@ class ReflectionHelper {
 
 	/**
 	 * Загружает и возвращает экземпляр класса при условии его существования
-	 * @param string $className Имя класса
+	 * @param string|object $className Имя класса или экземпляр класса
 	 * @param null|string[] $parentClassFilter Опциональный фильтр родительского класса
 	 * @param bool $throwOnFail true - упасть при ошибке, false - вернуть null
-	 * @return ReflectionClass|object|null
+	 * @return object|null
 	 * @throws InvalidConfigException
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
 	 */
-	public static function LoadClassByName(string $className, ?array $parentClassFilter = null, $throwOnFail = true):?object {
-		if (null === $class = self::New($className, $throwOnFail)) return null;
-		if (self::IsInSubclassOf($class, $parentClassFilter)) return new $className();
+	public static function LoadClassByName(string|object $className, ?array $parentClassFilter = null, bool $throwOnFail = true):?object {
+		if (null === $class = static::New($className, $throwOnFail)) return null;
+		if (static::IsInSubclassOf($class, $parentClassFilter)) return new $className();
 		if ($throwOnFail) throw new InvalidConfigException("Class $className not found in application scope!");
 		return null;
 	}
@@ -80,8 +79,8 @@ class ReflectionHelper {
 	 * @throws Throwable
 	 * @throws UnknownClassException
 	 */
-	public static function LoadClassFromFile(string $fileName, ?array $parentClassFilter = null, $throwOnFail = true):?object {
-		return self::LoadClassByName(self::GetClassNameFromFile($fileName), $parentClassFilter, $throwOnFail);
+	public static function LoadClassFromFile(string $fileName, ?array $parentClassFilter = null, bool $throwOnFail = true):?object {
+		return static::LoadClassByName(static::GetClassNameFromFile($fileName), $parentClassFilter, $throwOnFail);
 	}
 
 	/**
@@ -90,13 +89,13 @@ class ReflectionHelper {
 	 * @return string
 	 */
 	public static function GetClassNameFromFile(string $fileName):string {
-		return self::ExtractNamespaceFromFile($fileName).'\\'.PathHelper::ChangeFileExtension($fileName);
+		return static::ExtractNamespaceFromFile($fileName).'\\'.PathHelper::ChangeFileExtension($fileName);
 	}
 
 	/**
 	 * Проверяет, является ли класс потомков одного из перечисленных классов
-	 * @param ReflectionClass $class проверяемый класс
-	 * @param null|string[] $subclassesList список родительских классов для проверки (null - не проверять)
+	 * @param ReflectionClass $class Проверяемый класс
+	 * @param null|string[] $subclassesList Список родительских классов для проверки (null - не проверять)
 	 * @return bool
 	 */
 	public static function IsInSubclassOf(ReflectionClass $class, ?array $subclassesList = null):bool {
@@ -109,27 +108,24 @@ class ReflectionHelper {
 
 	/**
 	 * Fast class name shortener
-	 * app\modules\salary\models\references\RefGrades => RefGrades
 	 * @param string $className
-	 * @return string
+	 * @return null|string
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
 	 */
-	public static function GetClassShortName(string $className):string {
-		/** @noinspection NullPointerExceptionInspection */
-		return self::New($className)->getShortName();
+	public static function GetClassShortName(string $className):?string {
+		return self::New($className)?->getShortName();
 	}
 
 	/**
 	 * @param string|object $model
 	 * @param int $filter
-	 * @return array
+	 * @return null|array
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
 	 */
-	public static function GetMethods($model, int $filter = ReflectionMethod::IS_PUBLIC):array {
-		/** @noinspection NullPointerExceptionInspection */
-		return self::New($model)->getMethods($filter);
+	public static function GetMethods(string|object $model, int $filter = ReflectionMethod::IS_PUBLIC):?array {
+		return self::New($model)?->getMethods($filter);
 	}
 
 	/**
@@ -137,26 +133,26 @@ class ReflectionHelper {
 	 * Cause is_executable not enough!
 	 * @return bool
 	 */
-	public static function is_closure($t):bool {
+	public static function is_closure(mixed $t):bool {
 		return $t instanceof Closure;
 	}
 
 	/**
 	 * Делает публичным закрытый метод класса
-	 * @param string|object $className -- класс (объект или имя)
-	 * @param string $methodName -- имя метода, который нужно открыть для доступа
-	 * @param bool $throwOnFail -- true - упасть при ошибке, false - вернуть null
-	 * @return null|ReflectionMethod -- открытый метод (null при ошибке)
+	 * @param object|string $className Класс (объект или имя)
+	 * @param string $methodName Имя метода, который нужно открыть для доступа
+	 * @param bool $throwOnFail true - упасть при ошибке, false - вернуть null
+	 * @return null|ReflectionMethod Открытый метод (null при ошибке)
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
 	 * @noinspection BadExceptionsProcessingInspection
 	 */
-	public static function setAccessible($className, string $methodName, $throwOnFail = true):?ReflectionMethod {
+	public static function setAccessible(object|string $className, string $methodName, bool $throwOnFail = true):?ReflectionMethod {
 		if (null === $class = self::New($className, $throwOnFail)) return null;
 		try {
 			$reflectionMethod = new ReflectionMethod($class->getName(), $methodName);
 			$reflectionMethod->setAccessible(true);
-		} catch (Throwable $t) {
+		} catch (Throwable) {
 			return null;
 		}
 		return $reflectionMethod;
