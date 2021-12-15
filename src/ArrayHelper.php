@@ -49,12 +49,12 @@ class ArrayHelper extends YiiArrayHelper {
 	/**
 	 * Устанавливает значение в массиве только в том случае, если его ещё не существует
 	 * @param array $array
-	 * @param string|array|null $path
+	 * @param array|string|null $path
 	 * @param mixed $value
-	 * @return bool -- true если инициализация была проведена
+	 * @return bool true если инициализация была проведена
 	 * @throws Throwable
 	 */
-	public static function initValue(array &$array, $path, $value):bool {
+	public static function initValue(array &$array, array|string|null $path, mixed $value):bool {
 		if ((null === $currentValue = self::getValue($array, $path)) && $currentValue !== $value) {
 			self::setValue($array, $path, $value);
 			return true;
@@ -69,7 +69,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @param array $keys
 	 * @return array
 	 */
-	public static function array_find_deep(array $array, $search, array $keys = []):array {
+	public static function array_find_deep(array $array, mixed $search, array $keys = []):array {
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {
 				$sub = self::array_find_deep($value, $search, array_merge($keys, [$key]));
@@ -152,12 +152,12 @@ class ArrayHelper extends YiiArrayHelper {
 	 * Аналог ArrayHelper::map, возвращающий смапленные аттрибуты по ключам.
 	 * @param array $array
 	 * @param array $attributes Карта атрибутов в формате ['label' => 'attributeName', 'label2' => 'attribute2Name...]
-	 * @param string $keyIndexCode - параметр, при подстановке которого в имя атрибута в значении будет возвращен индекс
-	 * @param string $valueCode - параметр, при подстановке которого в имя атрибута в значении будет возвращено значение
+	 * @param string $keyIndexCode Параметр, при подстановке которого в имя атрибута в значении будет возвращен индекс
+	 * @param string $valueCode Параметр, при подстановке которого в имя атрибута в значении будет возвращено значение
 	 * @return array Массив в формате [['label' => $attribute1, 'label2' => $attribute2]]
 	 * @throws Throwable
 	 */
-	public static function mapEx(array $array, array $attributes, $keyIndexCode = 'key', $valueCode = 'value'):array {
+	public static function mapEx(array $array, array $attributes, string $keyIndexCode = 'key', string $valueCode = 'value'):array {
 		$result = [];
 		foreach ($array as $key => $element) {
 			$cell = [];
@@ -186,7 +186,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @return array
 	 * @throws Throwable
 	 */
-	public static function cmap(array $array, $id, array $concat_attributes = [], string $separator = ' '):array {
+	public static function cmap(array $array, mixed $id, array $concat_attributes = [], string $separator = ' '):array {
 		$result = [];
 		foreach ($array as $element) {
 			$key = self::getValue($element, $id);
@@ -202,11 +202,11 @@ class ArrayHelper extends YiiArrayHelper {
 
 	/**
 	 * Аналог ArrayHelper::map склеивающий значения нескольких аттрибутов, также умеющий склеивать и значения ключей
-	 * @param array $array -- обрабатываемый массив объектов
-	 * @param array $concat_keys -- массив атрибутов, подставляемых в ключ. Если атрибут не существует, подставляется непосредственное значение. Если значение - функция, то подставится её результат
-	 * @param array $concat_values -- массив атрибутов, подставляемых в значение. Если атрибут не существует, подставляется непосредственное значение. Если значение - функция, то подставится её результат
-	 * @param string $keys_separator -- разделитель для ключей
-	 * @param string $values_separator -- разделитель для атрибутов
+	 * @param array $array Обрабатываемый массив объектов
+	 * @param array $concat_keys Массив атрибутов, подставляемых в ключ. Если атрибут не существует, подставляется непосредственное значение. Если значение - функция, то подставится её результат
+	 * @param array $concat_values Массив атрибутов, подставляемых в значение. Если атрибут не существует, подставляется непосредственное значение. Если значение - функция, то подставится её результат
+	 * @param string $keys_separator Разделитель для ключей
+	 * @param string $values_separator Разделитель для атрибутов
 	 * @return array
 	 *
 	 * @throws Throwable
@@ -246,7 +246,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @return array
 	 * @throws Throwable
 	 */
-	public static function keymap(array $array, $attribute):array {
+	public static function keymap(array $array, mixed $attribute):array {
 		$result = [];
 		foreach ($array as $key => $element) {
 			$result[$key] = self::getValue($element, $attribute);
@@ -257,11 +257,10 @@ class ArrayHelper extends YiiArrayHelper {
 	/**
 	 * Устанавливает значение последней ячейке массива. Если параметр $value не установлен, удаляет последнюю ячейку массива
 	 * @param array $array
-	 * @param mixed $value
+	 * @param mixed|null $value
 	 */
-	public static function setLast(array &$array, $value = null):void {
+	public static function setLast(array &$array, mixed $value = null):void {
 		if (!count($array)) return;
-		/** @noinspection ReturnFalseInspection */
 		end($array);
 		if (null === $value) {
 			unset($array[key($array)]);
