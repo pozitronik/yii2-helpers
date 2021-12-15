@@ -22,7 +22,7 @@ class Utils {
 
 	/**
 	 * Возвращает единообразно кодированное имя файла (применяется во всех загрузках)
-	 * @param string $filename - имя файла
+	 * @param string $filename Имя файла
 	 * @return string
 	 */
 	public static function CypherFileName(string $filename):string {
@@ -35,7 +35,7 @@ class Utils {
 	 * @param mixed $some
 	 * @param string $title
 	 */
-	public static function log($some, string $title = ''):void {
+	public static function log(mixed $some, string $title = ''):void {
 
 		print "<pre>$title\n";
 		if (is_bool($some)) {
@@ -49,13 +49,13 @@ class Utils {
 	}
 
 	/**
-	 * @param mixed $data - данные для логирования
-	 * @param bool|false|string $title - заголовок логируемых данных
-	 * @param string $logName - файл вывода
-	 * @param int $format - формат вывода данных
-	 * @return string $string - возвращаем текстом всё, что налогировали
+	 * @param mixed $data Данные для логирования
+	 * @param null|string $title Заголовок логируемых данных
+	 * @param string $logName Файл вывода
+	 * @param int $format Формат вывода данных
+	 * @return string $string Возвращаем текстом всё, что налогировали
 	 */
-	public static function fileLog($data, $title = false, string $logName = 'debug.log', int $format = self::PRINT_R):string {
+	public static function fileLog(mixed $data, ?string $title = null, string $logName = 'debug.log', int $format = self::PRINT_R):string {
 		$return_contents = '';
 		if ($format === self::AS_IS && !is_scalar($data)) $format = self::PRINT_R;
 		switch ($format) {
@@ -68,12 +68,12 @@ class Utils {
 				$data = ob_get_clean();
 			break;
 		}
-		if ($title) {
-			$return_contents .= "\n".date('m/d/Y H:i:s')." $title\n";
-			file_put_contents(Yii::getAlias("@app")."/runtime/logs/$logName", "\n".date('m/d/Y H:i:s')." $title\n", FILE_APPEND);
-		} else {
+		if (null === $title) {
 			$return_contents .= "\n".date('m/d/Y H:i:s').": ";
 			file_put_contents(Yii::getAlias("@app")."/runtime/logs/$logName", "\n".date('m/d/Y H:i:s').": ", FILE_APPEND);
+		} else {
+			$return_contents .= "\n".date('m/d/Y H:i:s')." $title\n";
+			file_put_contents(Yii::getAlias("@app")."/runtime/logs/$logName", "\n".date('m/d/Y H:i:s')." $title\n", FILE_APPEND);
 		}
 		$return_contents .= $data;
 		file_put_contents(Yii::getAlias("@app")."/runtime/logs/$logName", $data, FILE_APPEND);
@@ -97,10 +97,10 @@ class Utils {
 	/** @noinspection PhpDocMissingThrowsInspection */
 	/**
 	 * RFC-4122 UUID
-	 * @param int|bool|false $length if defined, return only first $length symbols
-	 * @return bool|string
+	 * @param null|int $length if defined, return only first $length symbols
+	 * @return string
 	 */
-	public static function gen_uuid($length = false) {
+	public static function gen_uuid(?int $length = null):string {
 		$UUID = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x', // 32 bits for "time_low"
 			random_int(0, 0xffff), random_int(0, 0xffff),
 
@@ -153,21 +153,21 @@ class Utils {
 	 * @return bool|float
 	 */
 	public static function ceiling(int $number, int $significance = 1000) {
-		return (is_numeric($number) && is_numeric($significance))?(ceil($number / $significance) * $significance):false;
+		return (is_numeric($significance))?(ceil($number / $significance) * $significance):false;
 	}
 
 	/**
 	 * Переводит десятичный индекс в число позиционной системы счисления
-	 * @param int|float|false $n - десятичный индекс
-	 * @param string $alphabet - позиционный алфавит
-	 * @return string - строка с числом в указанном алфавите.
+	 * @param int $n Десятичный индекс
+	 * @param string $alphabet Позиционный алфавит
+	 * @return string Строка с числом в указанном алфавите.
 	 */
 	public static function DecToPos(int $n, string $alphabet):string {
 		$q = strlen($alphabet);
 		$ret = '';
 		while (true) {
 			$i = $n % $q;
-			$n = floor($n / $q);
+			$n = (int)floor($n / $q);
 			$ret = $alphabet[$i].$ret;
 			if ($n < 1) break;
 		}
@@ -222,11 +222,11 @@ class Utils {
 	/**
 	 * Сравнивает два относительных/абсолютных url (без учёта get-параметров), выясняя, ведут ли они на один и тот же путь.
 	 *
-	 * @param string|array $firstUrl url в виде строки или массива для Url::to
-	 * @param string|array|null $secondUrl аналогично. Если не задан, то используется текущий URL
+	 * @param string[]|string $firstUrl url в виде строки или массива для Url::to
+	 * @param string|string[]|null $secondUrl Аналогично. Если не задан, то используется текущий URL
 	 * @return bool
 	 */
-	public static function isSameUrlPath($firstUrl, $secondUrl = null):bool {
+	public static function isSameUrlPath(array|string $firstUrl, array|string $secondUrl = null):bool {
 		$secondUrl = $secondUrl??Yii::$app->request->pathInfo;
 		$firstUrl = self::setAbsoluteUrl(parse_url(Url::to($firstUrl), PHP_URL_PATH));
 		$secondUrl = self::setAbsoluteUrl(parse_url(Url::to($secondUrl), PHP_URL_PATH));
@@ -294,7 +294,7 @@ class Utils {
 			$currentHead = trim($matches[1]);
 			$currentHeadFileName = Yii::getAlias("@app/.git/{$currentHead}");
 			if (file_exists($currentHeadFileName) && (false !== $hash = file_get_contents($currentHeadFileName))) return $hash;
-		} catch (Throwable $t) {
+		} catch (Throwable) {
 			return 'unknown';
 		}
 		return 'unknown';
@@ -307,7 +307,7 @@ class Utils {
 	 * @noinspection OffsetOperationsInspection
 	 */
 	public static function ShortifyString(string $input):string {
-		if (false === $inputA = explode(' ', $input)) return '?';
+		if ([] === $inputA = explode(' ', $input)) return '?';
 		switch (count($inputA)) {
 			case 0:
 				$input = '?';
@@ -359,5 +359,41 @@ class Utils {
 			}
 		}
 		return trim(implode($splitter, $result), $delimiter);
+	}
+
+	/**
+	 * @param string $term
+	 * @param bool $fromQWERTY
+	 * @return string
+	 */
+	public static function SwitchKeyboard(string $term, bool $fromQWERTY = false):string {
+		$converter = $fromQWERTY
+			?[
+				'f' => 'а', ',' => 'б', 'd' => 'в', 'u' => 'г', 'l' => 'д', 't' => 'е', '`' => 'ё',
+				';' => 'ж', 'p' => 'з', 'b' => 'и', 'q' => 'й', 'r' => 'к', 'k' => 'л', 'v' => 'м',
+				'y' => 'н', 'j' => 'о', 'g' => 'п', 'h' => 'р', 'c' => 'с', 'n' => 'т', 'e' => 'у',
+				'a' => 'ф', '[' => 'х', 'w' => 'ц', 'x' => 'ч', 'i' => 'ш', 'o' => 'щ', 'm' => 'ь',
+				's' => 'ы', ']' => 'ъ', "'" => "э", '.' => 'ю', 'z' => 'я',
+				'F' => 'А', '<' => 'Б', 'D' => 'В', 'U' => 'Г', 'L' => 'Д', 'T' => 'Е', '~' => 'Ё',
+				':' => 'Ж', 'P' => 'З', 'B' => 'И', 'Q' => 'Й', 'R' => 'К', 'K' => 'Л', 'V' => 'М',
+				'Y' => 'Н', 'J' => 'О', 'G' => 'П', 'H' => 'Р', 'C' => 'С', 'N' => 'Т', 'E' => 'У',
+				'A' => 'Ф', '{' => 'Х', 'W' => 'Ц', 'X' => 'Ч', 'I' => 'Ш', 'O' => 'Щ', 'M' => 'Ь',
+				'S' => 'Ы', '}' => 'Ъ', '"' => 'Э', '>' => 'Ю', 'Z' => 'Я',
+				'@' => '"', '#' => '№', '$' => ';', '^' => ':', '&' => '?', '/' => '.', '?' => ',']
+			:[
+				'а' => 'f', 'б' => ',', 'в' => 'd', 'г' => 'u', 'д' => 'l', 'е' => 't', 'ё' => '`',
+				'ж' => ';', 'з' => 'p', 'и' => 'b', 'й' => 'q', 'к' => 'r', 'л' => 'k', 'м' => 'v',
+				'н' => 'y', 'о' => 'j', 'п' => 'g', 'р' => 'h', 'с' => 'c', 'т' => 'n', 'у' => 'e',
+				'ф' => 'a', 'х' => '[', 'ц' => 'w', 'ч' => 'x', 'ш' => 'i', 'щ' => 'o', 'ь' => 'm',
+				'ы' => 's', 'ъ' => ']', 'э' => "'", 'ю' => '.', 'я' => 'z',
+				'А' => 'F', 'Б' => '<', 'В' => 'D', 'Г' => 'U', 'Д' => 'L', 'Е' => 'T', 'Ё' => '~',
+				'Ж' => ':', 'З' => 'P', 'И' => 'B', 'Й' => 'Q', 'К' => 'R', 'Л' => 'K', 'М' => 'V',
+				'Н' => 'Y', 'О' => 'J', 'П' => 'G', 'Р' => 'H', 'С' => 'C', 'Т' => 'N', 'У' => 'E',
+				'Ф' => 'A', 'Х' => '{', 'Ц' => 'W', 'Ч' => 'X', 'Ш' => 'I', 'Щ' => 'O', 'Ь' => 'M',
+				'Ы' => 'S', 'Ъ' => '}', 'Э' => '"', 'Ю' => '>', 'Я' => 'Z',
+				'"' => '@', '№' => '#', ';' => '$', ':' => '^', '?' => '&', '.' => '/', ',' => '?',
+			];
+
+		return strtr($term, $converter);
 	}
 }
