@@ -11,7 +11,6 @@ use yii\helpers\Url;
 
 /**
  * Class Utils
- * @package app\helpers
  */
 class Utils {
 
@@ -395,5 +394,21 @@ class Utils {
 			];
 
 		return strtr($term, $converter);
+	}
+
+	/**
+	 * Превращает массив ошибок в набор читаемых строк
+	 * @param array $errors
+	 * @param array|string $separator
+	 * @return string
+	 */
+	public static function Errors2String(array $errors, array|string $separator = "\n"):string {
+		$output = [];
+		foreach ($errors as $attribute => $attributeErrors) {
+			$error = is_array($attributeErrors)?implode($separator, $attributeErrors):$attributeErrors;
+			$output[] = "{$attribute}: {$error}";
+		}
+
+		return implode($separator, $output);
 	}
 }
