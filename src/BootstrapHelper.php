@@ -62,10 +62,9 @@ class BootstrapHelper {
 	/**
 	 * Parses and returns the major BS version
 	 * @param string $ver
-	 * @return bool|string
+	 * @return string
 	 */
-	protected static function parseVer($ver) {
-		$ver = (string)$ver;
+	protected static function parseVer(string $ver):string {
 		return substr(trim($ver), 0, 1);
 	}
 }
