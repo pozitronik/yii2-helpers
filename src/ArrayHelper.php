@@ -346,4 +346,46 @@ class ArrayHelper extends YiiArrayHelper {
 		return count(array_keys($array, $value));
 	}
 
+	/**
+	 * @param array $array
+	 * @return mixed
+	 */
+	public static function getRandItem(array $array) {
+		/** @var int|string $rand */
+		$rand = array_rand($array);
+		return $array[$rand];
+	}
+
+	/**
+	 * Переименование ключей в ассоциативном массиве.
+	 * Например, переименовать ошибки полей в доле на наши.
+	 * $map = [входное поле => выходное поле]
+	 * Не сохраняет сортировку.
+	 *
+	 * @param array $array
+	 * @param string[] $map
+	 * @return array
+	 */
+	public static function renameKeysByMap(array $array, array $map):array {
+		foreach ($map as $search => $replace) {
+			if (isset($array[$search])) {
+				$array[$replace] = $array[$search];
+				unset($array[$search]);
+			}
+		}
+		return $array;
+	}
+
+	/**
+	 * Переименовать в ключах массива $array все вхождения строки $search на $replace
+	 *
+	 * @param array $array
+	 * @param string $search
+	 * @param string $replace
+	 * @return array
+	 */
+	public static function replaceStrInKeys(array $array, string $search, string $replace):array {
+		return array_combine(str_replace($search, $replace, array_keys($array)), $array);
+	}
+
 }
