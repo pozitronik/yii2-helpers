@@ -5,7 +5,6 @@ namespace pozitronik\helpers;
 
 use Throwable;
 use Yii;
-use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\base\Module;
 use yii\helpers\ArrayHelper;
@@ -15,19 +14,19 @@ use yii\helpers\ArrayHelper;
  */
 class ModuleHelper {
 	/**
-	 * @param string $name - id модуля из web.php
-	 * @param null|array $moduleConfigurationArray - конфиг модуля из web.php вида
+	 * @param string $name id модуля из web.php
+	 * @param null|array $moduleConfigurationArray Конфиг модуля из web.php вида
 	 * [
 	 *        'class' => Module::class,
 	 *        ...
 	 * ]
 	 * null - подтянуть конфиг автоматически
 	 *
-	 * @return null|Module|Component - загруженный экземпляр модуля
+	 * @return null|Module Загруженный экземпляр модуля
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	private static function LoadModule(string $name, ?array $moduleConfigurationArray = null):?Component {
+	private static function LoadModule(string $name, ?array $moduleConfigurationArray = null):?Module {
 		$moduleConfigurationArray = $moduleConfigurationArray??ArrayHelper::getValue(Yii::$app->modules, $name, []);
 		$module = Yii::createObject($moduleConfigurationArray, [$name]);
 		if ($module instanceof Module) return $module;
@@ -47,7 +46,7 @@ class ModuleHelper {
 		$modules = [];
 		$appModules = (null === $whiteList)?Yii::$app->modules:array_intersect_key(Yii::$app->modules, array_flip($whiteList));
 		foreach ($appModules as $name => $module) {
-			if (is_object($module) && ($module instanceof Module)) {//загруженный модуль
+			if (($module instanceof Module)) {//загруженный модуль
 				$modules[$name] = $module;
 			} elseif ($doLoad) {
 				if (null !== $loadedModule = self::LoadModule($name, $module)) $modules[$name] = $loadedModule;
@@ -67,7 +66,7 @@ class ModuleHelper {
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	public static function GetModuleById(string $moduleId, bool $doLoad = true):?Component {
+	public static function GetModuleById(string $moduleId, bool $doLoad = true):?Module {
 		return ArrayHelper::getValue(self::ListModules([$moduleId], $doLoad), $moduleId);
 	}
 
@@ -79,7 +78,7 @@ class ModuleHelper {
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	public static function GetModuleByClassName(string $className):?Component {
+	public static function GetModuleByClassName(string $className):?Module {
 		$config = array_filter(Yii::$app->modules, static function($element) use ($className) {
 			if (is_array($element)) {
 				return $className === ArrayHelper::getValue($element, 'class');
