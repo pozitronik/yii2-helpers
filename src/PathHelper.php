@@ -37,7 +37,9 @@ class PathHelper {
 	 * @return string
 	 */
 	public static function ChangeFileExtension(string $filename, string $new_extension = ''):string {
-		return '' === $new_extension?pathinfo($filename, PATHINFO_FILENAME):pathinfo($filename, PATHINFO_FILENAME).".$new_extension";
+		return '' === $new_extension
+			?static::ExtractFilePath($filename).static::ExtractFileName($filename)
+			:static::ExtractFilePath($filename).static::ExtractFileName($filename).'.'.$new_extension;
 	}
 
 	/**
@@ -46,7 +48,9 @@ class PathHelper {
 	 * @return string
 	 */
 	public static function ChangeFileName(string $filename, string $new_name = ''):string {
-		return '' === $new_name?pathinfo($filename, PATHINFO_EXTENSION):"$new_name.".pathinfo($filename, PATHINFO_EXTENSION);
+		return '' === $new_name
+			?static::ExtractFilePath($filename).static::ExtractFileExt($filename)
+			:static::ExtractFilePath($filename).$new_name.'.'.static::ExtractFileExt($filename);
 	}
 
 	/**
