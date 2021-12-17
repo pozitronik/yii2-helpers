@@ -34,23 +34,25 @@ class PathHelper {
 	/**
 	 * @param string $filename
 	 * @param string $new_extension
+	 * @param bool $preservePath
 	 * @return string
 	 */
-	public static function ChangeFileExtension(string $filename, string $new_extension = ''):string {
-		return '' === $new_extension
-			?static::ExtractFilePath($filename).static::ExtractFileName($filename)
-			:static::ExtractFilePath($filename).static::ExtractFileName($filename).'.'.$new_extension;
+	public static function ChangeFileExtension(string $filename, string $new_extension = '', bool $preservePath = false):string {
+		return ($preservePath?static::ExtractFilePath($filename):'').('' === $new_extension
+				?static::ExtractFileName($filename)
+				:static::ExtractFileName($filename).'.'.$new_extension);
 	}
 
 	/**
 	 * @param string $filename
 	 * @param string $new_name
+	 * @param bool $preservePath
 	 * @return string
 	 */
-	public static function ChangeFileName(string $filename, string $new_name = ''):string {
-		return '' === $new_name
-			?static::ExtractFilePath($filename).static::ExtractFileExt($filename)
-			:static::ExtractFilePath($filename).$new_name.'.'.static::ExtractFileExt($filename);
+	public static function ChangeFileName(string $filename, string $new_name = '', bool $preservePath = false):string {
+		return ($preservePath?static::ExtractFilePath($filename):'').('' === $new_name
+				?static::ExtractFileExt($filename)
+				:$new_name.'.'.static::ExtractFileExt($filename));
 	}
 
 	/**
