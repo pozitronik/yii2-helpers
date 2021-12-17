@@ -341,9 +341,9 @@ class Utils {
 	/**
 	 * Разбивает строку, вставляя в месте разделения символ $splitter
 	 * @param string $input
-	 * @param int $minlength -- минимальная длина неразбиваемого участка
-	 * @param string $splitter -- символ подстановки
-	 * @param string $delimiter -- символ, по которому будет идти разделение
+	 * @param int $minlength Минимальная длина неразбиваемого участка
+	 * @param string $splitter Символ подстановки
+	 * @param string $delimiter Символ, по которому будет идти разделение
 	 * @return string
 	 * @throws Throwable
 	 */
