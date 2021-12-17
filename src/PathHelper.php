@@ -50,14 +50,34 @@ class PathHelper {
 	}
 
 	/**
+	 * Имя файла с расширением
 	 * @param string $filename
 	 * @return string
 	 */
-	public static function ExtractFileName(string $filename):string {
+	public static function ExtractBaseName(string $filename):string {
 		return pathinfo($filename, PATHINFO_BASENAME);
 	}
 
 	/**
+	 * Имя файла без расширения
+	 * @param string $filename
+	 * @return string
+	 */
+	public static function ExtractFileName(string $filename):string {
+		return pathinfo($filename, PATHINFO_FILENAME);
+	}
+
+	/**
+	 * Расширение файла
+	 * @param string $filename
+	 * @return string
+	 */
+	public static function ExtractFileExt(string $filename):string {
+		return pathinfo($filename, PATHINFO_EXTENSION);
+	}
+
+	/**
+	 * Путь файла без имени
 	 * @param string $filename
 	 * @return string
 	 */
