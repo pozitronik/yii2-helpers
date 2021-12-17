@@ -58,6 +58,14 @@ class PathHelper {
 	}
 
 	/**
+	 * @param string $filename
+	 * @return string
+	 */
+	public static function ExtractFilePath(string $filename):string {
+		return pathinfo($filename, PATHINFO_DIRNAME).DIRECTORY_SEPARATOR;
+	}
+
+	/**
 	 * Находит разницу между двумя путями, возвращая относительный путь меж ними
 	 * @param string $path
 	 * @param string $basePath
