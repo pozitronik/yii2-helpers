@@ -34,27 +34,61 @@ class PathHelper {
 	/**
 	 * @param string $filename
 	 * @param string $new_extension
+	 * @param bool $preservePath
 	 * @return string
 	 */
-	public static function ChangeFileExtension(string $filename, string $new_extension = ''):string {
-		return '' === $new_extension?pathinfo($filename, PATHINFO_FILENAME):pathinfo($filename, PATHINFO_FILENAME).".$new_extension";
+	public static function ChangeFileExtension(string $filename, string $new_extension = '', bool $preservePath = false):string {
+		return ($preservePath?static::ExtractFilePath($filename):'').('' === $new_extension
+				?static::ExtractFileName($filename)
+				:static::ExtractFileName($filename).'.'.$new_extension);
 	}
 
 	/**
 	 * @param string $filename
 	 * @param string $new_name
+	 * @param bool $preservePath
 	 * @return string
 	 */
-	public static function ChangeFileName(string $filename, string $new_name = ''):string {
-		return '' === $new_name?pathinfo($filename, PATHINFO_EXTENSION):"$new_name.".pathinfo($filename, PATHINFO_EXTENSION);
+	public static function ChangeFileName(string $filename, string $new_name = '', bool $preservePath = false):string {
+		return ($preservePath?static::ExtractFilePath($filename):'').('' === $new_name
+				?static::ExtractFileExt($filename)
+				:$new_name.'.'.static::ExtractFileExt($filename));
 	}
 
 	/**
+	 * Имя файла с расширением
+	 * @param string $filename
+	 * @return string
+	 */
+	public static function ExtractBaseName(string $filename):string {
+		return pathinfo($filename, PATHINFO_BASENAME);
+	}
+
+	/**
+	 * Имя файла без расширения
 	 * @param string $filename
 	 * @return string
 	 */
 	public static function ExtractFileName(string $filename):string {
-		return pathinfo($filename, PATHINFO_BASENAME);
+		return pathinfo($filename, PATHINFO_FILENAME);
+	}
+
+	/**
+	 * Расширение файла
+	 * @param string $filename
+	 * @return string
+	 */
+	public static function ExtractFileExt(string $filename):string {
+		return pathinfo($filename, PATHINFO_EXTENSION);
+	}
+
+	/**
+	 * Путь файла без имени
+	 * @param string $filename
+	 * @return string
+	 */
+	public static function ExtractFilePath(string $filename):string {
+		return pathinfo($filename, PATHINFO_DIRNAME).DIRECTORY_SEPARATOR;
 	}
 
 	/**
