@@ -137,4 +137,12 @@ class ControllerHelper {
 		return $names;
 	}
 
+	/**
+	 * Является ли текущий запрос запросом на ajax-валидацию формы
+	 * @return bool
+	 */
+	public static function IsAjaxValidationRequest():bool {
+		return null !== Yii::$app->request->post('ajax');
+	}
+
 }
