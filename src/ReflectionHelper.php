@@ -168,4 +168,14 @@ class ReflectionHelper {
 	public static function getPropertyType(object|string $class, string $property):?string {
 		return (new ReflectionProperty($class, $property))?->getType()?->getName();
 	}
+
+	/**
+	 * @param object|string $class
+	 * @return bool|null
+	 * @throws ReflectionException
+	 * @throws UnknownClassException
+	 */
+	public static function isInstantiable(object|string $class):?bool {
+		return self::New($class)?->isInstantiable();
+	}
 }
