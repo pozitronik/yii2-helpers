@@ -33,6 +33,14 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @throws Throwable
 	 */
 	public static function getValue($array, $key, $default = null) {
+		/**
+		 * Обход отсутствия строгой типизации в Yii2. \yii\helpers\BaseArrayHelper::getValue() позволяет
+		 * передавать null в параметре, но в php 8.1 метод упадёт на проверке property_exists()
+		 * @see https://github.com/pozitronik/yii2-badgewidget/issues/5
+		 */
+		if (null === $key && is_object($array)) {
+			if (isset($array->{null})) return $array->{null};
+		}
 		$result = parent::getValue($array, $key, $default);
 		if ($result === $default) {
 			if ($default instanceof Closure) {
