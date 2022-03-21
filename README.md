@@ -24,7 +24,7 @@ to the require section of your `composer.json` file.
 Requirements
 ------------
 
-PHP >= 7.4.0
+PHP >= 8.0
 
 Usage
 -----
