@@ -6,6 +6,7 @@ namespace pozitronik\helpers;
 use RuntimeException;
 use Throwable;
 use Yii;
+use yii\base\Exception;
 use yii\helpers\BaseFileHelper;
 
 /**
@@ -145,5 +146,26 @@ class PathHelper {
 			if (false !== strrpos(BaseFileHelper::normalizePath(Yii::getAlias($path, false)), $parentDir)) return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Возвращает случайное имя файла во временном каталоге с заданным префиксом и расширением
+	 * @param string|null $prefix Префикс имени файла
+	 * @param string|null $ext Расширение файла (без точки). Если не указано, будет использовано расширение 'tmp'
+	 * @return string
+	 * @throws Exception
+	 */
+	public static function GetRandomTempFileName(?string $prefix = null, ?string $ext = null):string {
+		return sys_get_temp_dir().DIRECTORY_SEPARATOR.($prefix??'').Yii::$app->security->generateRandomString(6).'.'.($ext??'tmp');
+	}
+
+	/**
+	 * Возвращает имя файла во временном каталоге. Полезно для формирования всяких загрузок.
+	 * @param string|null $filename Если не задано, сгенерирует случайное имя файла без расширения.
+	 * @return string
+	 * @throws Exception
+	 */
+	public static function GetTempFileName(?string $filename = null):string {
+		return sys_get_temp_dir().DIRECTORY_SEPARATOR.($filename??Yii::$app->security->generateRandomString(6));
 	}
 }
