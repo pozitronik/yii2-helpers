@@ -159,6 +159,27 @@ class ReflectionHelper {
 	}
 
 	/**
+	 * Возвращает значение свойства (в т.ч. приватного) $property в классе $className для объекта $object
+	 * @param object|string $className Класс (объект или имя)
+	 * @param string $property Название свойства
+	 * @param object|null $object null для статических переменных, иначе объект переменной
+	 * @param bool $throwOnFail
+	 * @return mixed
+	 * @throws ReflectionException
+	 * @throws UnknownClassException
+	 */
+	public static function getValue(object|string $className, string $property, ?object $object = null, bool $throwOnFail = true):mixed {
+		if (null === $class = self::New($className, $throwOnFail)) return null;
+		try {
+			$reflectionProperty = new ReflectionProperty($class->getName(), $property);
+			$reflectionProperty->setAccessible(true);
+			return $reflectionProperty->getValue($object);
+		} catch (Throwable) {
+			return null;
+		}
+	}
+
+	/**
 	 * Возвращает тип атрибута класса, null, если не объявлен
 	 * @param object|string $class
 	 * @param string $property
