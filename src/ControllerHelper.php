@@ -51,7 +51,8 @@ class ControllerHelper {
 	 * @throws Throwable
 	 */
 	public static function GetControllerByControllerId(string $controllerId, ?string $moduleId = null):?object {
-		if (null === $module = ModuleHelper::GetModuleById($moduleId)) throw new InvalidConfigException("Module $moduleId not found or module not configured properly.");
+		$module = (null === $moduleId)?Yii::$app:ModuleHelper::GetModuleById($moduleId);
+		if (null === $module) throw new InvalidConfigException("Module $moduleId not found or module not configured properly.");
 		$controllerId = implode('', array_map('ucfirst', preg_split('/-/', $controllerId, -1, PREG_SPLIT_NO_EMPTY)));
 		return self::LoadControllerClassFromFile("{$module->controllerPath}/{$controllerId}Controller.php", $moduleId);
 
