@@ -27,7 +27,7 @@ class ControllerHelper {
 	 * @throws Throwable
 	 */
 	public static function LoadControllerClassFromFile(string $fileName, ?string $moduleId, ?array $parentClassFilter = null):?object {
-		$className = ReflectionHelper::GetClassNameFromFile($fileName);
+		$className = ReflectionHelper::GetClassNameFromFile(Yii::getAlias($fileName));
 		if ((null === $class = ReflectionHelper::New($className)) || !$class->isInstantiable()) return null;
 		if (ReflectionHelper::IsInSubclassOf($class, $parentClassFilter)) {
 			if (null === $moduleId) {
