@@ -8,6 +8,7 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Module;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 
 /**
  * Class ModuleHelper
@@ -70,7 +71,6 @@ class ModuleHelper {
 		return ArrayHelper::getValue(self::ListModules([$moduleId], $doLoad), $moduleId);
 	}
 
-
 	/**
 	 * Возвращает модуль по его имени класса
 	 * @param string $className
@@ -95,14 +95,17 @@ class ModuleHelper {
 
 	/**
 	 * Возвращает массив путей к контроллерам модулей, например для построения навигации
+	 * @param bool $normalizePath true: нормализовать пути, false: оставить как есть
 	 * @return string[]
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	public static function GetAllControllersPaths():array {
+	public static function GetAllControllersPaths(bool $normalizePath = true):array {
 		$result = [];
 		foreach (self::ListModules() as $module) {
-			$result[$module->id] = $module->controllerPath;
+			$result[$module->id] = $normalizePath
+				?FileHelper::normalizePath(Yii::getAlias($module->controllerPath))
+				:$module->controllerPath;
 		}
 		return $result;
 	}
