@@ -11,6 +11,7 @@ use Yii;
 use yii\base\Controller;
 use yii\base\InvalidConfigException;
 use yii\base\UnknownClassException;
+use yii\helpers\FileHelper;
 
 /**
  * Class ControllerHelper
@@ -20,7 +21,7 @@ class ControllerHelper {
 	/**
 	 * Загружает динамически класс веб-контроллера Yii2 по его пути
 	 * @param string $fileName
-	 * @param string|null $moduleId
+	 * @param string|null $moduleId Если null, метод попытается определить контроллер модуля
 	 * @param string[]|null $parentClassFilter Фильтр по родительскому классу (загружаемый контролер должен от него наследоваться)
 	 * @return self|null
 	 * @throws InvalidConfigException
@@ -28,18 +29,32 @@ class ControllerHelper {
 	 */
 	public static function LoadControllerClassFromFile(string $fileName, ?string $moduleId = null, ?array $parentClassFilter = null):?object {
 		$className = ReflectionHelper::GetClassNameFromFile(Yii::getAlias($fileName));
+		if (null === $moduleId) $moduleId = static::GetControllerModuleIdByFilename($fileName);
 		if ((null === $class = ReflectionHelper::New($className)) || !$class->isInstantiable()) return null;
 		if (ReflectionHelper::IsInSubclassOf($class, $parentClassFilter)) {
-			if (null === $moduleId) {
-				$module = Yii::$app;
-			} else {
-				$module = ModuleHelper::GetModuleById($moduleId);
-				if (null === $module) throw new InvalidConfigException("Module $moduleId not found or module not configured properly.");
-			}
+			$module = (null === $moduleId)
+				?Yii::$app
+				:ModuleHelper::GetModuleById($moduleId);
+			if (null === $module) throw new InvalidConfigException("Module $moduleId not found or module not configured properly.");
 			return new $className(self::ExtractControllerId($className), $module);
 		}
 
 		return null;
+	}
+
+	/**
+	 * По пути контроллера пытается определить, какому модулю он принадлежит
+	 * @param string $fileName
+	 * @return string|null
+	 * @throws InvalidConfigException
+	 * @throws Throwable
+	 */
+	public static function GetControllerModuleIdByFilename(string $fileName):?string {
+		$controllerFilePath = FileHelper::normalizePath(PathHelper::ExtractFilePath(Yii::getAlias($fileName)));
+		$controllersMap = ModuleHelper::GetAllControllersPaths();
+		return (false === $found = array_search($controllerFilePath, $controllersMap, true))
+			?null
+			:$found;
 	}
 
 	/**
