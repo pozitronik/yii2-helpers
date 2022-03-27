@@ -63,7 +63,7 @@ class ControllerHelper {
 	 * @param string $path
 	 * @param string|null $moduleId
 	 * @param string[]|null $parentClassFilter Фильтр по классу родителя
-	 * @return self[]
+	 * @return Controller[]
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
