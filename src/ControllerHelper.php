@@ -21,7 +21,7 @@ class ControllerHelper {
 	/**
 	 * Загружает динамически класс веб-контроллера Yii2 по его пути
 	 * @param string $fileName
-	 * @param string|null $moduleId Если null, метод попытается определить контроллер модуля
+	 * @param string|null $moduleId Если null, то контроллер загрузится от приложения
 	 * @param string[]|null $parentClassFilter Фильтр по родительскому классу (загружаемый контролер должен от него наследоваться)
 	 * @return self|null
 	 * @throws InvalidConfigException
@@ -29,7 +29,6 @@ class ControllerHelper {
 	 */
 	public static function LoadControllerClassFromFile(string $fileName, ?string $moduleId = null, ?array $parentClassFilter = null):?object {
 		$className = ReflectionHelper::GetClassNameFromFile(Yii::getAlias($fileName));
-		if (null === $moduleId) $moduleId = static::GetControllerModuleIdByFilename($fileName);
 		if ((null === $class = ReflectionHelper::New($className)) || !$class->isInstantiable()) return null;
 		if (ReflectionHelper::IsInSubclassOf($class, $parentClassFilter)) {
 			$module = (null === $moduleId)
@@ -43,7 +42,8 @@ class ControllerHelper {
 	}
 
 	/**
-	 * По пути контроллера пытается определить, какому модулю он принадлежит
+	 * По пути контроллера пытается определить, какому модулю он принадлежит.
+	 * Важно: функции для определения путей требуется загрузить все модули, это может привести к неожиданным последствиям
 	 * @param string $fileName
 	 * @return string|null
 	 * @throws InvalidConfigException
