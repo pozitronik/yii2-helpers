@@ -52,9 +52,10 @@ class ControllerHelper {
 	public static function GetControllerModuleIdByFilename(string $fileName):?string {
 		$controllerFilePath = FileHelper::normalizePath(PathHelper::ExtractFilePath(Yii::getAlias($fileName)));
 		$controllersMap = ModuleHelper::GetAllControllersPaths();
-		return (false === $found = array_search($controllerFilePath, $controllersMap, true))
+		/*вычленяет только те модули, $controllerPath которых является корневым для искомого контроллера*/
+		return (false === $subarray = array_filter($controllersMap, static fn(string $value) => 0 === strpos($controllerFilePath, $value)))
 			?null
-			:$found;
+			:key($subarray);
 	}
 
 	/**
