@@ -49,6 +49,7 @@ jobs:
           ini-values: opcache.enable=1, opcache.enable_cli=1, apc.enable_cli=1
         env:
           COMPOSER_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
+          COMPOSER_ROOT_VERSION: dev-main
 
       - name: Check php and composer
         run: php -v && composer --version
