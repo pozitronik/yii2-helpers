@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace app\models;
 
-use pozitronik\dynamic_attributes\traits\DynamicAttributesSearchTrait;
 use Throwable;
 use yii\data\ActiveDataProvider;
 
@@ -11,7 +10,6 @@ use yii\data\ActiveDataProvider;
  * Class UsersSearch
  */
 class UsersSearch extends Users {
-	use DynamicAttributesSearchTrait;
 
 	/**
 	 * @inheritdoc
@@ -37,7 +35,7 @@ class UsersSearch extends Users {
 			'query' => $query
 		]);
 
-		$dataProvider->setSort($this->adaptSort([
+		$dataProvider->setSort([
 			'enableMultiSort' => true,//в тестах потребуется сортировка по двум атрибутам для гарантии попадания в проверяемый индекс
 			'defaultOrder' => ['id' => SORT_ASC],
 			'attributes' => [
@@ -54,13 +52,12 @@ class UsersSearch extends Users {
 					'desc' => [Users::fieldName('login') => SORT_DESC]
 				]
 			]
-		]));
+		]);
 
 		$this->load($params);
 		$query->andFilterWhere([static::fieldName('id') => $this->id]);
 		$query->andFilterWhere(['like', static::fieldName('username'), $this->username]);
 		$query->andFilterWhere(['like', static::fieldName('login'), $this->login]);
-		$this->adaptQuery($query);
 
 
 		return $dataProvider;

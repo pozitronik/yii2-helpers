@@ -4,10 +4,12 @@ declare(strict_types = 1);
 namespace app\models;
 
 use pozitronik\helpers\Utils;
+use pozitronik\traits\traits\ActiveRecordTrait;
 use Yii;
 use yii\base\Event;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
 use yii\db\Exception;
 use yii\web\IdentityInterface;
 
@@ -21,6 +23,7 @@ use yii\web\IdentityInterface;
  * @property-read string $authKey @see [[yii\web\IdentityInterface::getAuthKey()]]
  */
 class Users extends ActiveRecord implements IdentityInterface {
+	use ActiveRecordTrait;
 
 	/**
 	 * @inheritDoc
@@ -31,7 +34,7 @@ class Users extends ActiveRecord implements IdentityInterface {
 				'id' => [
 					'class' => AttributeBehavior::class,
 					'attributes' => [
-						ActiveRecord::EVENT_BEFORE_INSERT => 'id'
+						BaseActiveRecord::EVENT_BEFORE_INSERT => 'id'
 					],
 					'value' => static function(Event $event) {
 						$connection = Yii::$app->get('db');

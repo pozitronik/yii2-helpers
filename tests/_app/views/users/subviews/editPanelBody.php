@@ -8,7 +8,6 @@ declare(strict_types = 1);
  */
 
 use app\models\Users;
-use pozitronik\dynamic_attributes\widgets\grid\DynamicAttributesGrid;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -20,12 +19,5 @@ use yii\widgets\ActiveForm;
 </div>
 <div class="row">
 	<div class="col-md-12">
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-12">
-		<?= $form->field($model, 'dynamicAttributesTypes')->widget(DynamicAttributesGrid::class, [
-			'form' => $form
-		]) ?>
 	</div>
 </div>

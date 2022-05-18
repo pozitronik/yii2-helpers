@@ -10,7 +10,6 @@ declare(strict_types = 1);
  * @var ActiveDataProvider $dataProvider
  */
 
-use app\components\TemporaryHelper;
 use app\models\Users;
 use app\models\UsersSearch;
 use kartik\grid\ActionColumn;
@@ -38,7 +37,7 @@ $id = "{$modelName}-index-grid";
 	'export' => false,
 	'resizableColumns' => true,
 	'responsive' => true,
-	'columns' => array_merge([
+	'columns' => [
 		[
 			'class' => ActionColumn::class,
 			'template' => '<div class="btn-group">{view}{edit}{delete}</div>',
@@ -83,5 +82,5 @@ $id = "{$modelName}-index-grid";
 			]),
 			'format' => 'raw',
 		],
-	], TemporaryHelper::DynamicColumns($model))
+	]
 ]) ?>
