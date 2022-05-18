@@ -12,8 +12,8 @@ use Codeception\Module\Cli;
  */
 class DatabaseMigrationExtension extends Extension {
 	public static $events = [
-		Events::SUITE_BEFORE => 'beforeSuite',
-		Events::TEST_BEFORE => 'beforeSuite'
+//		Events::SUITE_BEFORE => 'beforeSuite',
+//		Events::TEST_BEFORE => 'beforeSuite'
 	];
 
 	public function beforeSuite():void {
