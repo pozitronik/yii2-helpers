@@ -48,6 +48,17 @@ class ArrayHelperTest extends Unit {
 		], $testArray);
 	}
 
+	/**
+	 * Такие дела
+	 * @return void
+	 */
+	public function testFloatEquals():void {
+		$piPHP = 3.1415926535897;
+		$piPg = 3.14159265358969;
+		self::assertEquals($piPHP, $piPg);
+		self::assertNotSame($piPHP, $piPg);
+		self::assertTrue(ArrayHelper::isFloatEquals($piPHP, $piPg, 0.0000000000001));
+	}
 
 	/**
 	 * @return void
