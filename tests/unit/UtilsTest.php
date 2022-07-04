@@ -16,7 +16,7 @@ class UtilsTest extends Unit {
 	/**
 	 * @return void
 	 */
-	public function testSomeFeature():void {
+	public function testErrors2String():void {
 		$this->tester->assertEquals(
 			"name: Ошибка #1: 0: Внутренняя ошибка #1\nОшибка #2: 0: Внутренняя ошибка #2\nОшибка #3: 0: Внутренняя ошибка #4",
 			Utils::Errors2String([
