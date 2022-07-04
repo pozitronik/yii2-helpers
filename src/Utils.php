@@ -405,7 +405,7 @@ class Utils {
 	public static function Errors2String(array $errors, array|string $separator = "\n"):string {
 		$output = [];
 		foreach ($errors as $attribute => $attributeErrors) {
-			$error = is_array($attributeErrors)?implode($separator, $attributeErrors):$attributeErrors;
+			$error = is_array($attributeErrors)?self::Errors2String($attributeErrors):$attributeErrors;
 			$output[] = "{$attribute}: {$error}";
 		}
 
