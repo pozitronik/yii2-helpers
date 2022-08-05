@@ -35,7 +35,11 @@ class ControllerHelper {
 				?Yii::$app
 				:ModuleHelper::GetModuleById($moduleId);
 			if (null === $module) throw new InvalidConfigException("Module $moduleId not found or module not configured properly.");
-			return new $className(self::ExtractControllerId($className), $module);
+			return Yii::createObject([
+				'class' => $className,
+				'id' => self::ExtractControllerId($className),
+				'module' => $module
+			]);
 		}
 
 		return null;
