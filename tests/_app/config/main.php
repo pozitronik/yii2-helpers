@@ -18,6 +18,7 @@ $config = [
 		'@vendor' => './vendor',
 		'@bower' => '@vendor/bower-asset',
 		'@npm' => '@vendor/npm-asset',
+		'@tests' => './tests'
 	],
 	'modules' => [
 		'gridview' => [
