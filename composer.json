@@ -16,10 +16,10 @@
 		}
 	],
 	"require": {
-		"php": ">=8.0"
+		"php": ">=8.0",
+		"yiisoft/yii2": "dev-master"
 	},
 	"require-dev": {
-		"yiisoft/yii2": "dev-master",
 		"phpunit/phpunit": "^9.5",
 		"codeception/codeception": "^4.1",
 		"codeception/module-asserts": "^1.3",
