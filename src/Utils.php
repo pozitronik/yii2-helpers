@@ -280,26 +280,6 @@ class Utils {
 	}
 
 	/**
-	 * Get latest commit
-	 * @return string
-	 * @noinspection BadExceptionsProcessingInspection
-	 */
-	public static function LastCommit():string {
-		try {
-			$headFileName = Yii::getAlias('@app/.git/HEAD');
-			if (!file_exists($headFileName)) return 'unknown';
-			preg_match('#^ref:(.+)$#', file_get_contents($headFileName), $matches);
-
-			$currentHead = trim($matches[1]);
-			$currentHeadFileName = Yii::getAlias("@app/.git/{$currentHead}");
-			if (file_exists($currentHeadFileName) && (false !== $hash = file_get_contents($currentHeadFileName))) return $hash;
-		} catch (Throwable) {
-			return 'unknown';
-		}
-		return 'unknown';
-	}
-
-	/**
 	 * Return two first word letters of input (used for iconify text)
 	 * @param string $input
 	 * @return string

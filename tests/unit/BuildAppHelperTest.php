@@ -32,4 +32,13 @@ class BuildAppHelperTest extends Unit {
 		self::assertNull(BuildAppHelper::VersionInfo('this.version+info-string.is-wrong'));
 	}
 
+	/**
+	 * @return void
+	 * @covers BuildAppHelper::LastCommit
+	 */
+	public function testLastCommit():void {
+		self::assertEquals('69d38b5513b7d90f58ca71cdcdf2ed7d70b25c8a', BuildAppHelper::LastCommit('@tests/_data/git'));
+		self::assertNull(BuildAppHelper::LastCommit('this-dir-is-not-existed'));
+	}
+
 }
