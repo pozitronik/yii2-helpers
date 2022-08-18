@@ -20,6 +20,8 @@
 		"yiisoft/yii2": "dev-master"
 	},
 	"require-dev": {
+		"cusodede/yii2-default-controller": "^1.0.0",
+		"pozitronik/yii2-badgewidget": "^2.0.0",
 		"phpunit/phpunit": "^9.5",
 		"codeception/codeception": "^4.1",
 		"codeception/module-asserts": "^1.3",
