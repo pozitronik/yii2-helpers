@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Extensions;
 
-use Codeception\Events;
 use Codeception\Extension;
 use Codeception\Module\Cli;
 
