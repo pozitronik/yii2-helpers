@@ -287,18 +287,11 @@ class Utils {
 	 */
 	public static function ShortifyString(string $input):string {
 		if ([] === $inputA = explode(' ', $input)) return '?';
-		switch (count($inputA)) {
-			case 0:
-				$input = '?';
-			break;
-			case 1:
-				$input = mb_substr($input, 0, 1);
-			break;
-			default:
-				$input = mb_strtoupper(mb_substr($inputA[0], 0, 1).mb_substr($inputA[1], 0, 1));
-			break;
-		}
-		return $input;
+		return match (count($inputA)) {
+			0 => '?',
+			1 => mb_substr($input, 0, 1),
+			default => mb_strtoupper(mb_substr($inputA[0], 0, 1).mb_substr($inputA[1], 0, 1))
+		};
 	}
 
 	/**
