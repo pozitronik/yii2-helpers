@@ -57,7 +57,7 @@ class ControllerHelper {
 		$controllerFilePath = FileHelper::normalizePath(PathHelper::ExtractFilePath(Yii::getAlias($fileName)));
 		$controllersMap = ModuleHelper::GetAllControllersPaths();
 		/*вычленяет только те модули, $controllerPath которых является корневым для искомого контроллера*/
-		return (false === $subarray = array_filter($controllersMap, static fn(string $value) => 0 === strpos($controllerFilePath, $value)))
+		return ([] === $subarray = array_filter($controllersMap, static fn(string $value) => 0 === strpos($controllerFilePath, $value)))
 			?null
 			:key($subarray);
 	}

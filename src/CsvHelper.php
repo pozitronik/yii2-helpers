@@ -29,7 +29,7 @@ class CsvHelper {
 	/**
 	 * Преобразование массива в CSV
 	 * @param array $array Исходный массив
-	 * @param string $delimiter разделитель строк
+	 * @param string $delimiter Разделитель строк
 	 * @return string|null CSV contents
 	 */
 	public static function arrayToCsv(array $array, string $delimiter = ';'):?string {

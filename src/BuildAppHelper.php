@@ -62,7 +62,7 @@ class BuildAppHelper {
 
 			$currentHead = trim($matches[1]);
 			$currentHeadFileName = Yii::getAlias("{$gitDir}/{$currentHead}");
-			if (file_exists($currentHeadFileName) && (false !== $hash = trim(file_get_contents($currentHeadFileName))))
+			if (file_exists($currentHeadFileName) && ('' !== $hash = trim(file_get_contents($currentHeadFileName))))
 				return $hash;
 		} catch (Throwable) {
 			return null;
