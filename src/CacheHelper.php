@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace pozitronik\helpers;
 
 use Throwable;
+use yii\base\BaseObject;
 
 /**
  * Class CacheHelper
@@ -44,5 +45,43 @@ class CacheHelper {
 	public static function MethodSignature(string $method = __METHOD__, array $parameters = [], array $attributes = []):string {
 		$parametersSignature = static::MethodParametersSignature($parameters, $attributes);
 		return "{$method}({$parametersSignature})";
+	}
+
+	/**
+	 * Вычисляет уникальную подпись метода класса.
+	 * @param BaseObject|string $object
+	 * @param string $method
+	 * @param array $parameters
+	 * @param array $attributes
+	 * @return string
+	 * @noinspection PhpPossiblePolymorphicInvocationInspection
+	 * @noinspection PhpDocSignatureInspection
+	 */
+	public static function ObjectMethodSignature(object|string $object = __CLASS__, string $method = __METHOD__, array $parameters = [], array $attributes = []):string {
+		$objectKey = null;//assume it's static
+		if (is_object($object)) {
+			if ($object->hasProperty('primaryKey')) $objectKey = serialize($object->primaryKey);
+			$object = $object::class;
+		}
+		$parametersSignature = static::MethodParametersSignature($parameters, $attributes);
+		return "{$object}{$objectKey}{$method}({$parametersSignature})";
+	}
+
+	/**
+	 * Вычисляет уникальную подпись для объекта с любыми идентификаторами
+	 * @param object|string $object
+	 * @param array $identifiers
+	 * @return string
+	 */
+	public static function ObjectSignature(object|string $object = __CLASS__, array $identifiers = []):string {
+		$objectKey = null;//assume it's static
+		if (is_object($object)) {
+			if ($object->hasProperty('primaryKey')) $objectKey = serialize($object->primaryKey);
+			$object = $object::class;
+		}
+		(null === $objectKey)
+			?$identifierArray[$object] = $identifiers
+			:$identifierArray[$object][$objectKey] = $identifiers;
+		return serialize($identifierArray);
 	}
 }
