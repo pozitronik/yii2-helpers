@@ -17,7 +17,7 @@
 	],
 	"require": {
 		"php": ">=8.0",
-		"yiisoft/yii2": "dev-master"
+		"yiisoft/yii2": "^2.0.0"
 	},
 	"require-dev": {
 		"cusodede/yii2-default-controller": "^1.0.0",
