@@ -9,37 +9,41 @@ use pozitronik\helpers\ControllerHelper;
  */
 class ControllerHelperTest extends Unit {
 
-	public function testExtractSubFolderControllerId() {
-		$this->assertEquals(
+	/**
+	 * @return void
+	 * @covers ControllerHelper::ExtractControllerIdWithSubFolders
+	 */
+	public function testExtractSubFolderControllerId():void {
+		static::assertEquals(
 			'default',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\controllers\DefaultController')
 		);
-		$this->assertEquals(
+		static::assertEquals(
 			'ajax/default',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\controllers\ajax\DefaultController')
 		);
-		$this->assertEquals(
+		static::assertEquals(
 			'ajax/default-supa-pupa',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\controllers\ajax\DefaultSupaPupaController')
 		);
-		$this->assertEquals(
+		static::assertEquals(
 			'ajax/anotherfolder/default-supa-pupa',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\controllers\ajax\anotherfolder\DefaultSupaPupaController')
 		);
 
-		$this->assertEquals(
+		static::assertEquals(
 			'default',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\modules\test\controllers\DefaultController')
 		);
-		$this->assertEquals(
+		static::assertEquals(
 			'ajax/default',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\modules\test\controllers\ajax\DefaultController')
 		);
-		$this->assertEquals(
+		static::assertEquals(
 			'ajax/default-supa-pupa',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\modules\test\controllers\ajax\DefaultSupaPupaController')
 		);
-		$this->assertEquals(
+		static::assertEquals(
 			'ajax/anotherfolder/default-supa-pupa',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\modules\test\controllers\ajax\anotherfolder\DefaultSupaPupaController')
 		);
