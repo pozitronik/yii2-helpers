@@ -37,7 +37,7 @@ class ControllerHelper {
 			if (null === $module) throw new InvalidConfigException("Module $moduleId not found or module not configured properly.");
 			return Yii::createObject([
 				'class' => $className,
-				'id' => self::ExtractControllerId($className),
+				'id' => self::ExtractControllerIdWithSubFolders($className),
 				'module' => $module
 			]);
 		}
@@ -136,8 +136,52 @@ class ControllerHelper {
 	 * @return string
 	 */
 	public static function ExtractControllerId(string $className):string {
-		$controllerName = preg_replace('/(^.+)(\\\)([A-Z].+)(Controller$)/', '$3', $className);//app/shit/BlaBlaBlaController => BlaBlaBla
-		return mb_strtolower(implode('-', preg_split('/([[:upper:]][[:lower:]]+)/', $controllerName, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY)));
+		return self::ConvertControllerNameToId(self::ExtractControllerName($className));
+	}
+
+	/**
+	 * app/shit/BlaBlaBlaController => BlaBlaBla
+	 * @param string $className
+	 * @return string
+	 */
+	public static function ExtractControllerName(string $className):string {
+		return preg_replace('/(^.+)(\\\)([A-Z].+)(Controller$)/', '$3', $className);
+	}
+
+	/**
+	 * BlaBlaBla => bla-bla-bla
+	 * @param string $controllerName
+	 * @return string
+	 */
+	public static function ConvertControllerNameToId(string $controllerName):string {
+		return mb_strtolower(implode(
+			'-',
+			preg_split(
+				'/([[:upper:]][[:lower:]]+)/',
+				$controllerName,
+				-1,
+				PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+			)
+		));
+	}
+
+	/**
+	 * app\controllers\ajax\DefaultController => ajax/default
+	 * Возвращает ID контроллера с учетом вложенных папок
+	 * @param string $className
+	 * @return string
+	 */
+	public static function ExtractControllerIdWithSubFolders(string $className):string {
+		$controllerName = self::ExtractControllerName($className);
+		$controllerId = self::ConvertControllerNameToId($controllerName);
+
+		if (preg_match(sprintf('/controllers\\\([a-zA-Z].+)\\\%s/', $controllerName), $className, $matches)) {
+			$folders = mb_strtolower(str_replace('\\', '/', $matches[1]));
+
+			$controllerId = "{$folders}/{$controllerId}";
+		}
+
+		return $controllerId;
 	}
 
 	/**
