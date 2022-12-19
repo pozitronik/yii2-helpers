@@ -50,6 +50,8 @@ class ControllerHelperTest extends Unit {
 			'ajax/anotherfolder/default-supa-pupa',
 			ControllerHelper::ExtractControllerIdWithSubFolders('app\modules\test\controllers\ajax\anotherfolder\DefaultSupaPupaController')
 		);
+		static::assertNull(ControllerHelper::ExtractControllerIdWithSubFolders('app\controllers\ajax\Controller'));
+		static::assertNull(ControllerHelper::ExtractControllerIdWithSubFolders('app\controllers\ajax\SomeControllerClass'));
 	}
 
 	/**
@@ -96,5 +98,16 @@ class ControllerHelperTest extends Unit {
 		$controller = Yii::$app->createControllerByID('site');
 		static::assertNotNull($controller);
 		static::assertEquals(['error', 'camel-case', 'defined-error'], ControllerHelper::GetControllerActions($controller));
+	}
+
+	/**
+	 * @covers ControllerHelper::LoadControllerClassFromFile
+	 * @return void
+	 * @throws InvalidConfigException
+	 * @throws Throwable
+	 */
+	public function testLoadControllerClassFromFile():void {
+		static::assertNotNull(ControllerHelper::LoadControllerClassFromFile('@app/controllers/SiteController.php'));
+		static::assertNull(ControllerHelper::LoadControllerClassFromFile('@app/controllers/SiteControllerClass.php'));
 	}
 }
