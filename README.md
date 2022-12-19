@@ -2,7 +2,7 @@ yii2-helpers
 ============
 Some useful helpers for Yii2 framework
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/pozitronik/yii2-helpers/CI%20with%20PostgreSQL)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/pozitronik/yii2-helpers/ci_with_postgresql.yml?branch=master)
 
 Installation
 ------------
