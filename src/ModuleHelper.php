@@ -16,20 +16,24 @@ use yii\helpers\FileHelper;
 class ModuleHelper {
 	/**
 	 * @param string $name id модуля из web.php
-	 * @param null|array $moduleConfigurationArray Конфиг модуля из web.php вида
+	 * @param null|array|string $moduleConfiguration Конфиг модуля из web.php вида
 	 * [
 	 *        'class' => Module::class,
 	 *        ...
 	 * ]
+	 * или
+	 * 'class' => Module::class
 	 * null - подтянуть конфиг автоматически
 	 *
 	 * @return null|Module Загруженный экземпляр модуля
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	private static function LoadModule(string $name, ?array $moduleConfigurationArray = null):?Module {
-		$moduleConfigurationArray = $moduleConfigurationArray??ArrayHelper::getValue(Yii::$app->modules, $name, []);
-		$module = Yii::createObject($moduleConfigurationArray, [$name]);
+	public static function LoadModule(string $name, null|array|string $moduleConfiguration = null):?Module {
+		if (!is_string($moduleConfiguration)) {
+			$moduleConfiguration = $moduleConfiguration??ArrayHelper::getValue(Yii::$app->modules, $name, []);
+		}
+		$module = Yii::createObject($moduleConfiguration, [$name]);
 		if ($module instanceof Module) return $module;
 		return null;
 	}

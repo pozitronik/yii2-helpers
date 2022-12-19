@@ -2,11 +2,11 @@
 declare(strict_types = 1);
 
 use app\models\Users;
+use app\modules\dummy\DummyModule;
 use yii\log\FileTarget;
 use yii\caching\DummyCache;
 use yii\web\AssetManager;
 use yii\web\ErrorHandler;
-use kartik\grid\Module as GridModule;
 
 $db = require __DIR__.'/db.php';
 
@@ -21,13 +21,16 @@ $config = [
 		'@tests' => './tests'
 	],
 	'modules' => [
-		'gridview' => [
-			'class' => GridModule::class,
-		],
+		'dummy' => [
+			'class' => DummyModule::class,
+			'params' => [
+				'version' => '3.0'
+			]
+		]
 	],
 	'components' => [
 		'request' => [
-			'cookieValidationKey' => 'sosijopu',
+			'cookieValidationKey' => 'testKey',
 		],
 		'cache' => [
 			'class' => DummyCache::class,
@@ -60,10 +63,7 @@ $config = [
 			'basePath' => '@app/assets'
 		],
 		'db' => $db
-	],
-	'params' => [
-		'bsVersion' => '4'
-	],
+	]
 ];
 
 return $config;
