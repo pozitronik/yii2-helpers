@@ -6,8 +6,10 @@ namespace pozitronik\helpers;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionException;
+use ReflectionMethod;
 use Throwable;
 use Yii;
+use yii\base\Action;
 use yii\base\Controller;
 use yii\base\InvalidConfigException;
 use yii\base\UnknownClassException;
@@ -186,20 +188,58 @@ class ControllerHelper {
 	}
 
 	/**
-	 * Возвращает все экшены контроллера
-	 * @param string $controller_class
-	 * @param bool $asRequestName Привести имя экшена к виду в запросе
+	 * Returns all loadable controller actions
+	 * @param Controller $controller
+	 * @param bool $asRequestName Cast action name to request name
 	 * @return string[]
 	 * @throws ReflectionException
 	 * @throws UnknownClassException
+	 * @throws Throwable
 	 */
-	public static function GetControllerActions(string $controller_class, bool $asRequestName = true):array {
-		$names = ArrayHelper::getColumn(ReflectionHelper::GetMethods($controller_class), 'name');
-		$names = preg_filter('/^action([A-Z])(\w+?)/', '$1$2', $names);
-		if ($asRequestName) {
-			foreach ($names as &$name) $name = self::GetActionRequestName($name);
+	public static function GetControllerActions(Controller $controller, bool $asRequestName = true):array {
+		$actionsNames = array_merge(preg_filter('/^action([A-Z])(\w+?)$/', '$1$2',
+			ArrayHelper::getColumn(ReflectionHelper::GetMethods($controller::class), 'name')
+		), array_keys($controller->actions()));
+		foreach ($actionsNames as &$actionName) {
+			$actionName = static::IsControllerHasAction($controller, $actionName)
+				?$actionName
+				:null;
 		}
-		return $names;
+		unset ($actionName);
+		$actionsNames = array_filter($actionsNames);
+		if ($asRequestName) $actionsNames = array_map(static fn($actionName):string => ControllerHelper::GetActionRequestName($actionName), $actionsNames);
+
+		return $actionsNames;
+	}
+
+	/**
+	 * Checks if controller has a loadable action method (without creation of a Action object itself)
+	 * @param Controller $controller
+	 * @param string $actionName
+	 * @return bool
+	 * @throws Throwable
+	 */
+	public static function IsControllerHasAction(Controller $controller, string $actionName):bool {
+		return ((null !== $class = ArrayHelper::getValue($controller->actions(), $actionName)) && is_subclass_of($class, Action::class)) ||
+			static::IsControllerHasActionMethod($controller, static::GetActionRequestName($actionName));
+	}
+
+	/**
+	 * @param Controller $controller
+	 * @param string $actionName
+	 * @return bool
+	 * @throws ReflectionException
+	 * @throws UnknownClassException
+	 */
+	public static function IsControllerHasActionMethod(Controller $controller, string $actionName):bool {
+		if (preg_match('/^(?:[a-z\d_]+-)*[a-z\d_]+$/', $actionName)) {
+			$actionName = 'action'.str_replace(' ', '', ucwords(str_replace('-', ' ', $actionName)));
+			if (method_exists($controller, $actionName) && (!property_exists($controller, 'disabledActions') || !in_array($actionName, ReflectionHelper::getValue($controller, 'disabledActions', $controller), true))) {
+				$method = new ReflectionMethod($controller, $actionName);
+				if ($method->isPublic() && $method->getName() === $actionName) return true;
+			}
+		}
+		return false;
 	}
 
 	/**
