@@ -3,14 +3,27 @@ declare(strict_types = 1);
 
 namespace app\controllers;
 
+use app\models\Dummy;
 use Yii;
+use yii\base\Action;
 use yii\helpers\Html;
 use yii\web\Controller;
+use yii\web\ErrorAction;
 
 /**
  * class SiteController
  */
 class SiteController extends Controller {
+
+	/**
+	 * @inheritDoc
+	 */
+	public function actions() {
+		return [
+			'definedError' => ErrorAction::class,
+			'notAction' => Dummy::class
+		];
+	}
 
 	/**
 	 * @return string
@@ -22,6 +35,13 @@ class SiteController extends Controller {
 			return Html::encode($exception->getMessage());
 		}
 		return "Status: {$exception->statusCode}";
+	}
+
+	/**
+	 * @return string
+	 */
+	public function actionCamelCase():string {
+		return 'camel-case';
 	}
 }
 
