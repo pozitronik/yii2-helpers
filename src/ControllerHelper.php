@@ -25,13 +25,14 @@ class ControllerHelper {
 	 * @param string $fileName
 	 * @param string|null $moduleId Если null, то контроллер загрузится от приложения
 	 * @param string[]|null $parentClassFilter Фильтр по родительскому классу (загружаемый контролер должен от него наследоваться)
-	 * @return self|null
+	 * @return Controller|null
 	 * @throws InvalidConfigException
 	 * @throws Throwable
 	 */
-	public static function LoadControllerClassFromFile(string $fileName, ?string $moduleId = null, ?array $parentClassFilter = null):?object {
+	public static function LoadControllerClassFromFile(string $fileName, ?string $moduleId = null, ?array $parentClassFilter = null):?Controller {
 		if (!file_exists(Yii::getAlias($fileName, false))) return null;
 		$className = ReflectionHelper::GetClassNameFromFile(Yii::getAlias($fileName));
+		if (null === $id = self::ExtractControllerIdWithSubFolders($className)) return null;
 		if ((null === $class = ReflectionHelper::New($className)) || !$class->isInstantiable()) return null;
 		if (ReflectionHelper::IsInSubclassOf($class, $parentClassFilter)) {
 			$module = (null === $moduleId)
@@ -40,7 +41,7 @@ class ControllerHelper {
 			if (null === $module) throw new InvalidConfigException("Module $moduleId not found or module not configured properly.");
 			return Yii::createObject([
 				'class' => $className,
-				'id' => self::ExtractControllerIdWithSubFolders($className),
+				'id' => $id,
 				'module' => $module
 			]);
 		}
@@ -170,21 +171,24 @@ class ControllerHelper {
 
 	/**
 	 * app\controllers\ajax\DefaultController => ajax/default
-	 * Возвращает ID контроллера с учетом вложенных папок
+	 * Returns the controller ID, including subfolders
 	 * @param string $className
-	 * @return string
+	 * @return null|string The controller ID, null, if file name is wrong
 	 */
-	public static function ExtractControllerIdWithSubFolders(string $className):string {
-		$controllerName = self::ExtractControllerName($className);
-		$controllerId = self::ConvertControllerNameToId($controllerName);
+	public static function ExtractControllerIdWithSubFolders(string $className):?string {
+		if (preg_match('/([a-zA-Z0-9])+Controller$/', $className)) {
+			$controllerName = self::ExtractControllerName($className);
+			$controllerId = self::ConvertControllerNameToId($controllerName);
 
-		if (preg_match(sprintf('/controllers\\\([a-zA-Z].+)\\\%s/', $controllerName), $className, $matches)) {
-			$folders = mb_strtolower(str_replace('\\', '/', $matches[1]));
+			if (preg_match(sprintf('/controllers\\\([a-zA-Z].+)\\\%s/', $controllerName), $className, $matches)) {
+				$folders = mb_strtolower(str_replace('\\', '/', $matches[1]));
 
-			$controllerId = "{$folders}/{$controllerId}";
+				$controllerId = "{$folders}/{$controllerId}";
+			}
+
+			return $controllerId;
 		}
-
-		return $controllerId;
+		return null;
 	}
 
 	/**

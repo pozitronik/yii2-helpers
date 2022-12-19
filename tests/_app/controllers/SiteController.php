@@ -5,7 +5,6 @@ namespace app\controllers;
 
 use app\models\Dummy;
 use Yii;
-use yii\base\Action;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\ErrorAction;
