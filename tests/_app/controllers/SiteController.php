@@ -5,6 +5,7 @@ namespace app\controllers;
 
 use app\models\Dummy;
 use Yii;
+use yii\base\Action;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\ErrorAction;
@@ -20,7 +21,8 @@ class SiteController extends Controller {
 	public function actions() {
 		return [
 			'definedError' => ErrorAction::class,
-			'notAction' => Dummy::class
+			'notAction' => Dummy::class,
+			'duplicate' => Action::class
 		];
 	}
 
@@ -42,5 +44,13 @@ class SiteController extends Controller {
 	public function actionCamelCase():string {
 		return 'camel-case';
 	}
+
+	/**
+	 * @return string
+	 */
+	public function actionDuplicate():string {
+		return 'duplicate';
+	}
+
 }
 

@@ -66,6 +66,7 @@ class ControllerHelperTest extends Unit {
 		static::assertTrue(ControllerHelper::IsControllerHasActionMethod($controller, 'error'));
 		static::assertFalse(ControllerHelper::IsControllerHasActionMethod($controller, 'definedError'));
 		static::assertFalse(ControllerHelper::IsControllerHasActionMethod($controller, 'camelCase'));
+		static::assertFalse(ControllerHelper::IsControllerHasActionMethod($controller, 'actionDuplicate'));
 		static::assertFalse(ControllerHelper::IsControllerHasActionMethod($controller, 'actionIndex'));
 		static::assertFalse(ControllerHelper::IsControllerHasActionMethod($controller, 'notAction'));
 	}
@@ -82,6 +83,7 @@ class ControllerHelperTest extends Unit {
 		static::assertTrue(ControllerHelper::IsControllerHasAction($controller, 'error'));
 		static::assertTrue(ControllerHelper::IsControllerHasAction($controller, 'definedError'));
 		static::assertTrue(ControllerHelper::IsControllerHasAction($controller, 'camelCase'));
+		static::assertTrue(ControllerHelper::IsControllerHasAction($controller, 'duplicate'));
 		static::assertFalse(ControllerHelper::IsControllerHasAction($controller, 'index'));
 		static::assertFalse(ControllerHelper::IsControllerHasAction($controller, 'notAction'));
 	}
@@ -97,7 +99,7 @@ class ControllerHelperTest extends Unit {
 	public function testGetControllerActions():void {
 		$controller = Yii::$app->createControllerByID('site');
 		static::assertNotNull($controller);
-		static::assertEquals(['error', 'camel-case', 'defined-error'], ControllerHelper::GetControllerActions($controller));
+		static::assertEquals(['error', 'camel-case', 'duplicate', 'defined-error'], ControllerHelper::GetControllerActions($controller));
 	}
 
 	/**

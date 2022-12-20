@@ -79,7 +79,6 @@ class ControllerHelper {
 		if (null === $module) throw new InvalidConfigException("Module $moduleId not found or module not configured properly.");
 		$controllerId = implode('', array_map('ucfirst', preg_split('/-/', $controllerId, -1, PREG_SPLIT_NO_EMPTY)));
 		return self::LoadControllerClassFromFile("{$module->controllerPath}/{$controllerId}Controller.php", $moduleId);
-
 	}
 
 	/**
@@ -185,7 +184,6 @@ class ControllerHelper {
 
 				$controllerId = "{$folders}/{$controllerId}";
 			}
-
 			return $controllerId;
 		}
 		return null;
@@ -212,8 +210,7 @@ class ControllerHelper {
 		unset ($actionName);
 		$actionsNames = array_filter($actionsNames);
 		if ($asRequestName) $actionsNames = array_map(static fn($actionName):string => ControllerHelper::GetActionRequestName($actionName), $actionsNames);
-
-		return $actionsNames;
+		return array_unique($actionsNames);
 	}
 
 	/**
