@@ -92,6 +92,7 @@ class ControllerHelper {
 	 */
 	public static function GetControllersList(string $path, ?string $moduleId = null, ?array $parentClassFilter = null):array {
 		$result = [];
+		if (!file_exists(Yii::getAlias($path, false))) return $result;
 		$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(Yii::getAlias($path)), RecursiveIteratorIterator::SELF_FIRST);
 		/** @var RecursiveDirectoryIterator $file */
 		foreach ($files as $file) {
