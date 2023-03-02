@@ -32,8 +32,8 @@ class ArrayHelper extends YiiArrayHelper {
 	/**
 	 * Расширенная функция, может кидать исключение или выполнять замыкание
 	 * @param array|object $array
-	 * @param array|Closure|string $key
-	 * @param null|Throwable|Closure $default
+	 * @param array|Closure|string|int $key
+	 * @param null|mixed|Throwable $default
 	 * @return mixed
 	 * @throws Throwable
 	 */
