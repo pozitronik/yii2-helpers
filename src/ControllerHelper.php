@@ -92,12 +92,28 @@ class ControllerHelper {
 	 */
 	public static function GetControllersList(string $path, ?string $moduleId = null, ?array $parentClassFilter = null):array {
 		$result = [];
+		$files = static::ListControllersFiles($path);
+		foreach ($files as $file) {
+			if (null !== $controller = self::LoadControllerClassFromFile($file, $moduleId, $parentClassFilter)) {
+				$result[] = $controller;
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * Возвращает список файлов контроллеров в каталоге
+	 * @param string $path
+	 * @return array
+	 */
+	public static function ListControllersFiles(string $path):array {
+		$result = [];
 		if (!file_exists(Yii::getAlias($path, false))) return $result;
 		$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(Yii::getAlias($path)), RecursiveIteratorIterator::SELF_FIRST);
 		/** @var RecursiveDirectoryIterator $file */
 		foreach ($files as $file) {
-			if ($file->isFile() && 'php' === $file->getExtension() && null !== $controller = self::LoadControllerClassFromFile($file->getRealPath(), $moduleId, $parentClassFilter)) {
-				$result[] = $controller;
+			if ($file->isFile() && preg_match('%^([A-Z].+)Controller.php$%', $file->getFilename())) {
+				$result[] = $file->getRealPath();
 			}
 		}
 		return $result;
