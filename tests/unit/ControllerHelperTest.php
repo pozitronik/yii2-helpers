@@ -123,7 +123,9 @@ class ControllerHelperTest extends Unit {
 	public function testGetControllersList():void {
 		$loadedControllers = ControllerHelper::GetControllersList('@app/controllers/');
 		static::assertCount(2, $loadedControllers);
-		static::assertEquals(['site', 'users'], ArrayHelper::getColumn($loadedControllers, 'id'));
+		$controllersIds = ArrayHelper::getColumn($loadedControllers, 'id');
+		sort($controllersIds);
+		static::assertEquals(['site', 'users'], $controllersIds);
 	}
 
 	/**
@@ -132,6 +134,9 @@ class ControllerHelperTest extends Unit {
 	 */
 	public function testListControllersFiles():void {
 		$foundControllers = ControllerHelper::ListControllersFiles('@app/controllers/');
+		sort($foundControllers);
 		static::assertCount(2, $foundControllers);
+		static::assertStringEndsWith('SiteController.php', $foundControllers[0]);
+		static::assertStringEndsWith('UsersController.php', $foundControllers[1]);
 	}
 }
