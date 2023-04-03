@@ -132,6 +132,7 @@ class ControllerHelperTest extends Unit {
 	 */
 	public function testListControllersFiles():void {
 		$foundControllers = ControllerHelper::ListControllersFiles('@app/controllers/');
+		sort($foundControllers);
 		static::assertCount(2, $foundControllers);
 		static::assertStringEndsWith('SiteController.php', $foundControllers[0]);
 		static::assertStringEndsWith('UsersController.php', $foundControllers[1]);
