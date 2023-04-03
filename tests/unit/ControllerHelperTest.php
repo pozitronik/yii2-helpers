@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 
 use Codeception\Test\Unit;
+use pozitronik\helpers\ArrayHelper;
 use pozitronik\helpers\ControllerHelper;
 use yii\base\InvalidConfigException;
 use yii\base\UnknownClassException;
@@ -111,5 +112,17 @@ class ControllerHelperTest extends Unit {
 	public function testLoadControllerClassFromFile():void {
 		static::assertNotNull(ControllerHelper::LoadControllerClassFromFile('@app/controllers/SiteController.php'));
 		static::assertNull(ControllerHelper::LoadControllerClassFromFile('@app/controllers/SiteControllerClass.php'));
+	}
+
+	/**
+	 * @covers ControllerHelper::GetControllersList
+	 * @return void
+	 * @throws InvalidConfigException
+	 * @throws Throwable
+	 */
+	public function testGetControllersList():void {
+		$loadedControllers = ControllerHelper::GetControllersList('@app/controllers/');
+		static::assertCount(2, $loadedControllers);
+		static::assertEquals(['site', 'users'], ArrayHelper::getColumn($loadedControllers, 'id'));
 	}
 }
