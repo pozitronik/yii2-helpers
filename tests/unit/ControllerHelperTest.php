@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 
 use Codeception\Test\Unit;
+use pozitronik\helpers\ArrayHelper;
 use pozitronik\helpers\ControllerHelper;
 use yii\base\InvalidConfigException;
 use yii\base\UnknownClassException;
@@ -111,5 +112,31 @@ class ControllerHelperTest extends Unit {
 	public function testLoadControllerClassFromFile():void {
 		static::assertNotNull(ControllerHelper::LoadControllerClassFromFile('@app/controllers/SiteController.php'));
 		static::assertNull(ControllerHelper::LoadControllerClassFromFile('@app/controllers/SiteControllerClass.php'));
+	}
+
+	/**
+	 * @covers ControllerHelper::GetControllersList
+	 * @return void
+	 * @throws InvalidConfigException
+	 * @throws Throwable
+	 */
+	public function testGetControllersList():void {
+		$loadedControllers = ControllerHelper::GetControllersList('@app/controllers/');
+		static::assertCount(2, $loadedControllers);
+		$controllersIds = ArrayHelper::getColumn($loadedControllers, 'id');
+		sort($controllersIds);
+		static::assertEquals(['site', 'users'], $controllersIds);
+	}
+
+	/**
+	 * @return void
+	 * @throws Throwable
+	 */
+	public function testListControllersFiles():void {
+		$foundControllers = ControllerHelper::ListControllersFiles('@app/controllers/');
+		sort($foundControllers);
+		static::assertCount(2, $foundControllers);
+		static::assertStringEndsWith('SiteController.php', $foundControllers[0]);
+		static::assertStringEndsWith('UsersController.php', $foundControllers[1]);
 	}
 }
