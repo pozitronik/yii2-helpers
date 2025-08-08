@@ -53,8 +53,6 @@ class CacheHelper {
 	 * @param array $attributes
 	 * @param bool $hash
 	 * @return string
-	 * @noinspection PhpPossiblePolymorphicInvocationInspection
-	 * @noinspection PhpDocSignatureInspection
 	 */
 	public static function ObjectMethodSignature(object|string $object = __CLASS__, string $method = __METHOD__, array $parameters = [], array $attributes = [], bool $hash = true):string {
 		$objectKey = null;//assume it's static

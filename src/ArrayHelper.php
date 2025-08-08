@@ -120,10 +120,9 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @return array
 	 */
 	public static function diff_keys(array $array1, array $array2):array {
-		$result = [];
-		foreach ($array1 as $key => $value) {
-			if (!array_key_exists($key, $array2)) $result[$key] = $value;
-		}
+		$result = array_filter($array1, static function($key) use ($array2) {
+			return !array_key_exists($key, $array2);
+		}, ARRAY_FILTER_USE_KEY);
 		foreach ($array2 as $key => $value) {
 			if (!array_key_exists($key, $array1)) $result[$key] = $value;
 		}
@@ -142,7 +141,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @param array|null $_
 	 * @return array
 	 */
-	public static function merge_recursive(array $array1, array $array2, array $_ = null):array {
+	public static function merge_recursive(array $array1, array $array2, ?array $_ = null):array {
 		$arrays = func_get_args();
 		$merged = [];
 		while ($arrays) {
@@ -258,11 +257,9 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @throws Throwable
 	 */
 	public static function keymap(array $array, mixed $attribute):array {
-		$result = [];
-		foreach ($array as $key => $element) {
-			$result[$key] = self::getValue($element, $attribute);
-		}
-		return $result;
+		return array_map(static function($element) use ($attribute) {
+			return self::getValue($element, $attribute);
+		}, $array);
 	}
 
 	/**
@@ -313,7 +310,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @return array
 	 * @throws Throwable
 	 */
-	public static function mergeImplode(string $glue, array $array1, array $array2, array $_ = null):array {
+	public static function mergeImplode(string $glue, array $array1, array $array2, ?array $_ = null):array {
 		$arrays = func_get_args();
 		array_shift($arrays);//skip first argument
 		$merged = [];

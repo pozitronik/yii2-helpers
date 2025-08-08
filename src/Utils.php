@@ -139,6 +139,7 @@ class Utils {
 	/**
 	 * @param string $data
 	 * @return bool
+     * @deprecated since php 8.3 in prior to json_validate() method
 	 */
 	public static function is_json(string $data):bool {
 		json_decode($data);
@@ -225,7 +226,7 @@ class Utils {
 	 * @param string|string[]|null $secondUrl Аналогично. Если не задан, то используется текущий URL
 	 * @return bool
 	 */
-	public static function isSameUrlPath(array|string $firstUrl, array|string $secondUrl = null):bool {
+	public static function isSameUrlPath(array|string $firstUrl, array|string|null $secondUrl = null):bool {
 		$secondUrl = $secondUrl??Yii::$app->request->pathInfo;
 		$firstUrl = self::setAbsoluteUrl(parse_url(Url::to($firstUrl), PHP_URL_PATH));
 		$secondUrl = self::setAbsoluteUrl(parse_url(Url::to($secondUrl), PHP_URL_PATH));
@@ -283,7 +284,6 @@ class Utils {
 	 * Return two first word letters of input (used for iconify text)
 	 * @param string $input
 	 * @return string
-	 * @noinspection OffsetOperationsInspection
 	 */
 	public static function ShortifyString(string $input):string {
 		if ([] === $inputA = explode(' ', $input)) return '?';
