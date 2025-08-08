@@ -284,7 +284,6 @@ class Utils {
 	 * Return two first word letters of input (used for iconify text)
 	 * @param string $input
 	 * @return string
-	 * @noinspection OffsetOperationsInspection
 	 */
 	public static function ShortifyString(string $input):string {
 		if ([] === $inputA = explode(' ', $input)) return '?';
