@@ -139,6 +139,7 @@ class Utils {
 	/**
 	 * @param string $data
 	 * @return bool
+     * @deprecated since php 8.3 in prior to json_validate() method
 	 */
 	public static function is_json(string $data):bool {
 		json_decode($data);
