@@ -142,7 +142,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @param array|null $_
 	 * @return array
 	 */
-	public static function merge_recursive(array $array1, array $array2, array $_ = null):array {
+	public static function merge_recursive(array $array1, array $array2, ?array $_ = null):array {
 		$arrays = func_get_args();
 		$merged = [];
 		while ($arrays) {
@@ -313,7 +313,7 @@ class ArrayHelper extends YiiArrayHelper {
 	 * @return array
 	 * @throws Throwable
 	 */
-	public static function mergeImplode(string $glue, array $array1, array $array2, array $_ = null):array {
+	public static function mergeImplode(string $glue, array $array1, array $array2, ?array $_ = null):array {
 		$arrays = func_get_args();
 		array_shift($arrays);//skip first argument
 		$merged = [];
