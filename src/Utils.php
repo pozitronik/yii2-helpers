@@ -226,7 +226,7 @@ class Utils {
 	 * @param string|string[]|null $secondUrl Аналогично. Если не задан, то используется текущий URL
 	 * @return bool
 	 */
-	public static function isSameUrlPath(array|string $firstUrl, array|string $secondUrl = null):bool {
+	public static function isSameUrlPath(array|string $firstUrl, array|string|null $secondUrl = null):bool {
 		$secondUrl = $secondUrl??Yii::$app->request->pathInfo;
 		$firstUrl = self::setAbsoluteUrl(parse_url(Url::to($firstUrl), PHP_URL_PATH));
 		$secondUrl = self::setAbsoluteUrl(parse_url(Url::to($secondUrl), PHP_URL_PATH));
